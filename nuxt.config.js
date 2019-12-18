@@ -5,7 +5,7 @@ export default {
   ** Headers of the page
   */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'Coding Community | Next Direction',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -18,7 +18,7 @@ export default {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#083b66', throttle: 100 },
   /*
   ** Global CSS
   */
@@ -38,9 +38,22 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
+    '@nuxtjs/style-resources',
+    "nuxt-fontawesome",
   ],
+
+  styleResources: {
+    scss: [
+      '~assets/variables.scss'
+    ],
+  },
+
+  fontawesome: {
+    component: "fa",
+    imports: [],
+  },
+
   /*
   ** Build configuration
   */
