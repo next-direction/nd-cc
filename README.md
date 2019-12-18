@@ -27,3 +27,22 @@ First things I want to build are:
 The backend is powered by [Directus](https://directus.io/). Very little development is needed on this part (which was my goal from the beginning). Mostly hooks are required for certain tasks like default roles for new users or sanitizing user input.
 
 The frontend will be powered by [Nuxt.js](https://nuxtjs.org/). The goal here is to use as little dependencies as possible.
+
+## Build Setup
+
+``` bash
+# install dependencies
+$ npm run install
+
+# serve with hot reload at localhost:3000
+$ npm run dev
+
+# build for production and launch server
+$ npm run build
+$ npm run start
+
+# generate static project
+$ npm run generate
+```
+
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
