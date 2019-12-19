@@ -13,7 +13,7 @@
     <section class="user">
       <SignIn v-if="!user"/>
       <SignUp v-if="!user"/>
-      <button v-if="user" class="danger" @click="logout">Logout</button>
+      <UserMenu v-if="user"/>
     </section>
   </header>
 </template>
@@ -22,24 +22,20 @@
     import Search from '~/components/functional/Search.vue';
     import SignUp from '~/components/functional/SignUp.vue';
     import SignIn from '~/components/functional/SignIn.vue';
+    import UserMenu from '~/components/functional/UserMenu.vue';
 
     export default {
         components: {
             SignIn,
             SignUp,
             Search,
+            UserMenu,
         },
         computed: {
-            user() {
+            user () {
                 return this.$store.state.user;
-            }
+            },
         },
-        methods: {
-            logout() {
-                this.$cookies.remove('token');
-                this.$store.commit('setUser', null);
-            }
-        }
     };
 </script>
 
@@ -88,10 +84,6 @@
     .user {
       display: flex;
       align-items: center;
-
-      :first-child {
-        margin: 0 0.3rem;
-      }
     }
   }
 </style>

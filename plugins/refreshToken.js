@@ -7,7 +7,7 @@ let appObject;
 let storeObject;
 let baseUrl = '';
 
-export default function({app, env, store, redirect}) {
+export default function ({ app, env, store, redirect }) {
   baseUrl = env.baseUrl;
   redirectFunction = redirect;
   appObject = app;
@@ -27,7 +27,7 @@ export default function({app, env, store, redirect}) {
  *
  * @param {string} token - JWT token
  */
-function registerHandler() {
+function registerHandler () {
   const token = appObject.$cookies.get('token');
   const now = parseInt(Date.now() / 1000);
   const data = jwtDecode(token);
@@ -49,7 +49,7 @@ function registerHandler() {
  *
  * @returns {Promise<void>}
  */
-async function refresh() {
+async function refresh () {
   const token = appObject.$cookies.get('token');
 
   if (!token) {
@@ -58,15 +58,18 @@ async function refresh() {
 
   const res = await fetch(baseUrl + '/auth/refresh', {
     method: 'POST',
-    body: JSON.stringify({token}),
+    body: JSON.stringify({ token }),
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   });
-  const {data} = await res.json();
+  const { data } = await res.json();
 
   if (data && data.token) {
-    appObject.$cookies.set('token', data.token);
+    appObject.$cookies.set('token', data.token, {
+      sameSite: 'strict',
+      secure: 'https:' === window.location.protocol,
+    });
 
     const now = parseInt(Date.now() / 1000);
     const tokenData = jwtDecode(data.token);

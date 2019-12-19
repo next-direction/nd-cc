@@ -36,7 +36,7 @@
                         },
                         body: JSON.stringify({
                             email: this.email,
-                            password: this.password
+                            password: this.password,
                         }),
                     });
                     const result = await response.json();
@@ -46,9 +46,19 @@
                     }
 
                     if (result.data.token) {
-                        this.$cookies.set('token', result.data.token);
-                        this.$store.commit('setUser', result.data.user);
+                        this.$cookies.set('token', result.data.token, {
+                            sameSite: 'strict',
+                            secure: 'https:' === window.location.protocol,
+                        });
+
+                        const user = result.data.user;
+
+                        this.$store.commit('setUser', user);
                         this.$registerRefreshHandler(result.data.token);
+
+                        if (user.avatar) {
+                            this.$store.dispatch('fetchAvatar', { ...user, token: result.data.token });
+                        }
 
                         this.$router.push('/');
                     } else {
