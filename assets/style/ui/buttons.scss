@@ -1,0 +1,95 @@
+button {
+  font-size: 1.1rem;
+  padding: calc(0.5rem - 1px) 1rem;
+  background: white;
+  border-radius: $border-radius;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  position: relative;
+  text-align: center;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  text-decoration: none;
+  overflow: hidden;
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    padding-top: 200%;
+    padding-left: 250%;
+    margin-left: -20px !important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.8s;
+    border-radius: 40%;
+  }
+
+  &:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s
+  }
+
+  &.primary {
+    border: 1px solid $main-color;
+    color: $main-color;
+
+    &:after {
+      background: lighten($main-color, 50%);
+    }
+
+    &:hover,
+    &:active {
+      color: white;
+      background: $main-color;
+    }
+  }
+
+  &.success {
+    border: 1px solid $success-dark;
+    color: $success-dark;
+
+    &:after {
+      background: lighten($success-dark, 50%);
+    }
+
+    &:hover,
+    &:active {
+      color: white;
+      background: $success-dark;
+    }
+  }
+
+  &.info {
+    border: 1px solid $info-dark;
+    color: $info-dark;
+
+    &:after {
+      background: lighten($info-dark, 50%);
+    }
+
+    &:hover,
+    &:active {
+      color: white;
+      background: $info-dark;
+    }
+  }
+
+  &.danger {
+    border: 1px solid $danger-dark;
+    color: $danger-dark;
+
+    &:after {
+      background: lighten($danger-dark, 50%);
+    }
+
+    &:hover,
+    &:active {
+      color: white;
+      background: $danger-dark;
+    }
+  }
+}

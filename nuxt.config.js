@@ -23,29 +23,32 @@ export default {
   ** Global CSS
   */
   css: [
+    { src: '~assets/style/main.scss', lang: 'sass'}
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~plugins/refreshToken.js', mode: 'client' }
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    ['@nuxtjs/dotenv', { systemvars: true }]
   ],
   /*
   ** Nuxt.js modules
   */
   modules: [
-    '@nuxtjs/dotenv',
     '@nuxtjs/style-resources',
-    "nuxt-fontawesome",
+    'nuxt-fontawesome',
+    'cookie-universal-nuxt'
   ],
 
   styleResources: {
     scss: [
-      '~assets/variables.scss'
+      '~assets/style/variables.scss'
     ],
   },
 
@@ -63,5 +66,8 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost/d-api-1/public/d-api-1'
   }
 }

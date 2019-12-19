@@ -1,0 +1,25 @@
+@import '~assets/style/font.scss';
+
+html {
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+}
+
+h1, h2, h3, h4, h5, h6, a {
+  color: $main-color;
+}
+
+@import '~assets/style/ui/buttons.scss';
+@import '~assets/style/ui/form.scss';

@@ -1,11 +1,18 @@
 <template>
   <div class="register">
-    <button class="success">Sign in</button>
+    <button class="success" @click="showSignInForm">Sign in</button>
   </div>
 </template>
 
 <script>
-    export default {};
+    export default {
+        methods: {
+            showSignInForm () {
+                this.$store.commit('showBackdrop', true);
+                this.$store.commit('showSignIn', true);
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

@@ -1,0 +1,380 @@
+.form__button {
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Inputs */
+.form__field {
+  position: relative;
+  margin: 1rem 0;
+
+  input {
+    margin-top: 2rem;
+    border: 0;
+    border-bottom: 0.1rem solid white;
+    padding: 0.6rem;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+    background: none;
+    color: white;
+    font-size: 1rem;
+
+    &::placeholder {
+      color: transparent;
+    }
+
+    &:not(:placeholder-shown) + label,
+    &:focus + label {
+      top: 0.6rem;
+      color: white;
+      font-size: 0.8rem;
+    }
+  }
+
+  label {
+    position: absolute;
+    top: 2.6rem;
+    left: 0.6rem;
+    color: white;
+    transition: all 0.1s linear;
+    cursor: text;
+  }
+}
+
+/* Checkboxes */
+.form__checkbox {
+  position: relative;
+  margin: 1rem 0;
+
+  * {
+    cursor: pointer;
+  }
+
+  input {
+    display: none;
+
+    &.validated.invalid.visualize-errors + label {
+      color: $danger-dark;
+
+      &::before {
+        border-color: $danger-dark;
+      }
+    }
+  }
+
+  label {
+    margin-left: 2em;
+  }
+
+  /* Circle half style */
+  &.circle-half {
+    input {
+      &:checked + label {
+        &::before {
+          background-color: $main-light;
+        }
+
+        &::after {
+          left: 0.7em;
+          background-color: $main-color;
+        }
+      }
+
+      &.validated.invalid.visualize-errors + label {
+        color: $danger-dark;
+
+        &::before {
+          background-color: $danger-light;
+        }
+
+        &::after {
+          background-color: $danger-dark;
+        }
+      }
+    }
+
+    label {
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 0.9em;
+        height: 0.3em;
+        border-radius: 10em;
+        background-color: $gray-light;
+        position: absolute;
+        left: 0.3em;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s ease;
+      }
+
+      &::after {
+        content: "";
+        display: inline-block;
+        width: 0.8em;
+        height: 0.8em;
+        border-radius: 10em;
+        background-color: $gray-dark;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s ease;
+      }
+    }
+
+    &[danger] input:checked + label {
+      &::before {
+        background-color: $danger-light;
+      }
+
+      &::after {
+        background-color: $danger-dark;
+      }
+    }
+
+    &[info] input:checked + label {
+      &::before {
+        background-color: $info-light;
+      }
+
+      &::after {
+        background-color: $info-dark;
+      }
+    }
+
+    &[success] input:checked + label {
+      &::before {
+        background-color: $success-light;
+      }
+
+      &::after {
+        background-color: $success-dark;
+      }
+    }
+
+    &[warning] input:checked + label {
+      &::before {
+        background-color: $warning-light;
+      }
+
+      &::after {
+        background-color: $warning-dark;
+      }
+    }
+  }
+
+  /* Circle full style */
+  &.circle-full {
+    input {
+      &:checked + label {
+        &::before {
+          background-color: $main-light;
+          border: 0.1rem solid $main-color;
+        }
+
+        &::after {
+          left: 0.7em;
+          background-color: $main-color;
+        }
+      }
+
+      &.validated.invalid.visualize-errors + label {
+        color: $danger-dark;
+
+        &::before {
+          background-color: $danger-light;
+        }
+
+        &::after {
+          background-color: $danger-dark;
+        }
+      }
+    }
+
+    label {
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 1.5em;
+        height: 0.8em;
+        border-radius: 10em;
+        background-color: $gray-light;
+        border: 0.1rem solid $gray-dark;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s ease;
+      }
+
+      &::after {
+        content: "";
+        display: inline-block;
+        width: 0.8em;
+        height: 0.8em;
+        border-radius: 10em;
+        background-color: $gray-dark;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s ease;
+      }
+    }
+
+    &[danger] input:checked + label {
+      &::before {
+        background-color: $danger-light;
+        border-color: $danger-dark;
+      }
+
+      &::after {
+        background-color: $danger-dark;
+      }
+    }
+
+    &[info] input:checked + label {
+      &::before {
+        background-color: $info-light;
+        border-color: $info-dark;
+      }
+
+      &::after {
+        background-color: $info-dark;
+      }
+    }
+
+    &[success] input:checked + label {
+      &::before {
+        background-color: $success-light;
+        border-color: $success-dark;
+      }
+
+      &::after {
+        background-color: $success-dark;
+      }
+    }
+
+    &[warning] input:checked + label {
+      &::before {
+        background-color: $warning-light;
+        border-color: $warning-dark;
+      }
+
+      &::after {
+        background-color: $warning-dark;
+      }
+    }
+  }
+
+  /* Classic style */
+  &.classic {
+    input:checked + label {
+      &::before {
+        border: 0.1rem solid $main-color;
+      }
+
+      &::after {
+        color: $main-color;
+        opacity: 1;
+      }
+    }
+
+    label {
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border-radius: 0.2em;
+        border: 0.1rem solid $gray-dark;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s ease;
+      }
+
+      &::after {
+        content: "\2713";
+        display: inline-block;
+        position: absolute;
+        left: 0.2em;
+        top: 0.25em;
+        line-height: 1.05em;
+        font-size: 0.8em;
+        font-weight: bold;
+        opacity: 0;
+        transition: all .2s ease;
+      }
+    }
+
+    &[danger] input:checked + label {
+      &::before {
+        border-color: $danger-dark;
+      }
+
+      &::after {
+        color: $danger-dark;
+      }
+    }
+
+    &[info] input:checked + label {
+      &::before {
+        border-color: $info-dark;
+      }
+
+      &::after {
+        color: $info-dark;
+      }
+    }
+
+    &[success] input:checked + label {
+      &::before {
+        border-color: $success-dark;
+      }
+
+      &::after {
+        color: $success-dark;
+      }
+    }
+
+    &[warning] input:checked + label {
+      &::before {
+        border-color: $warning-dark;
+      }
+
+      &::after {
+        color: $warning-dark;
+      }
+    }
+
+    &[white] input + label {
+      &::before {
+        border-color: white;
+      }
+    }
+
+    &[white] input:checked + label {
+      &::before {
+        border-color: white;
+      }
+
+      &::after {
+        color: white;
+      }
+    }
+  }
+
+  ul.error-messages {
+    list-style-type: none;
+    font-size: 1.5rem;
+    color: $danger-dark;
+
+    li {
+      padding: 0.5rem;
+    }
+  }
+}

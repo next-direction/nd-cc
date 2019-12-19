@@ -11,8 +11,9 @@
       <Search/>
     </section>
     <section class="user">
-      <SignIn/>
-      <SignUp/>
+      <SignIn v-if="!user"/>
+      <SignUp v-if="!user"/>
+      <button v-if="user" class="danger" @click="logout">Logout</button>
     </section>
   </header>
 </template>
@@ -28,6 +29,17 @@
             SignUp,
             Search,
         },
+        computed: {
+            user() {
+                return this.$store.state.user;
+            }
+        },
+        methods: {
+            logout() {
+                this.$cookies.remove('token');
+                this.$store.commit('setUser', null);
+            }
+        }
     };
 </script>
 
