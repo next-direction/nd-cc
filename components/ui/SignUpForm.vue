@@ -4,16 +4,20 @@
       <h1>Sign up</h1>
       <span class="form__close" @click="closeSignUpForm">╳</span>
       <div class="form__field">
-        <input id="email-address" placeholder="Email address" v-model="email"/>
-        <label for="email-address">Email address</label>
+        <input id="signup-email" placeholder="Email address" v-model="email"/>
+        <label for="signup-email">Email address</label>
       </div>
       <div class="form__field">
-        <input id="password" type="password" placeholder="Password" v-model="password"/>
-        <label for="password">Password</label>
+        <input id="username" placeholder="Username" v-model="username"/>
+        <label for="username">Username</label>
       </div>
       <div class="form__field">
-        <input id="confirm-password" type="password" placeholder="Confirm password"/>
-        <label for="confirm-password">Confirm password</label>
+        <input id="signup-password" type="password" placeholder="Password" v-model="password"/>
+        <label for="signup-password">Password</label>
+      </div>
+      <div class="form__field">
+        <input id="signup-confirm-password" type="password" placeholder="Confirm password"/>
+        <label for="signup-confirm-password">Confirm password</label>
       </div>
       <hr style="border: none;">
       <div class="form__checkbox classic" white>
@@ -41,6 +45,7 @@
             return {
                 email: '',
                 password: '',
+                username: '',
             };
         },
         methods: {
@@ -55,6 +60,7 @@
                             email: this.email,
                             password: this.password,
                             status: 'invited',
+                            last_name: this.username,
                         }),
                     });
                     const result = await response.json();
@@ -63,7 +69,7 @@
                         alert(result.error.message);
                     }
 
-                    alert('Sign up successful');
+                    alert('Sign up successful! An Administrator has been informed and will activate you account as soon as possible.');
 
                     this.email = '';
                     this.password = '';

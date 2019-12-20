@@ -1,17 +1,15 @@
 <template>
   <section class="page-content">
     <SideBar/>
-    <NewestTopics/>
+    <div>Some content later on</div>
   </section>
 </template>
 
 <script>
-    import NewestTopics from '~/components/functional/NewestTopics.vue';
     import SideBar from '~/components/functional/SideBar.vue';
 
     export default {
         components: {
-            NewestTopics,
             SideBar,
         },
     };

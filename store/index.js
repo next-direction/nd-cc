@@ -7,6 +7,10 @@ export const state = () => ({
   baseUrl: '',
   user: null,
   avatar: '',
+  categories: {
+    all: [],
+    parents: [],
+  },
 });
 
 export const mutations = {
@@ -28,14 +32,38 @@ export const mutations = {
   setAvatar (state, url) {
     state.avatar = url;
   },
+  setCategories (state, categories) {
+    state.categories.all = categories;
+
+    const parentRelations = [];
+
+    categories.forEach(category => {
+      parentRelations[category.id] = category.parent_category;
+    });
+
+    state.categories.parents = parentRelations;
+  },
 };
 
 export const actions = {
   async nuxtServerInit ({ commit, dispatch }, { app, env }) {
     commit('setBaseUrl', env.baseUrl);
 
+    // fetch categories
+    const categoryResponse = await fetch(env.baseUrl + '/items/category', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const { data: categoryData } = await categoryResponse.json();
+
+    if (categoryData) {
+      commit('setCategories', categoryData);
+    }
+
     const token = app.$cookies.get('token');
 
+    // load user data
     if (isTokenValid(token)) {
       const tokenData = jwtDecode(token);
 
@@ -51,7 +79,7 @@ export const actions = {
         commit('setUser', data);
 
         if (data.avatar) {
-          return dispatch('fetchAvatar', { ...data, token });
+          await dispatch('fetchAvatar', { ...data, token });
         }
       }
     } else {

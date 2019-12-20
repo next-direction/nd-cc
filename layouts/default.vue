@@ -24,8 +24,8 @@
             Footer,
             Header,
             SignInForm,
-            SignUpForm
-        }
+            SignUpForm,
+        },
     };
 </script>
 
@@ -38,5 +38,7 @@
 
   main {
     flex: 1 0 auto;
+    display: flex;
+    justify-content: center;
   }
 </style>

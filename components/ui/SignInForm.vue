@@ -59,8 +59,6 @@
                         if (user.avatar) {
                             this.$store.dispatch('fetchAvatar', { ...user, token: result.data.token });
                         }
-
-                        this.$router.push('/');
                     } else {
                         alert('Error during sign in, please try again later');
                     }
