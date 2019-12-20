@@ -13,6 +13,24 @@ export const state = () => ({
   },
 });
 
+export const getters = {
+  category: state => id => {
+    return state.categories.all.find(category => +category.id === +id);
+  },
+  childCategories: (state, getters) => id => {
+    let children = Object.keys(state.categories.parents).filter(key => +state.categories.parents[key] === +id);
+
+    children.forEach(child => {
+      children = [
+        ...children,
+        ...getters.childCategories(child),
+      ];
+    });
+    console.log(children);
+    return children;
+  },
+};
+
 export const mutations = {
   showBackdrop (state, show) {
     state.backdrop = show;
