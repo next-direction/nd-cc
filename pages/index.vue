@@ -9,30 +9,43 @@
     import NewestTopics from '~/components/functional/NewestTopics.vue';
     import SideBar from '~/components/functional/SideBar.vue';
 
+    const fetchPages = async (app, store) => {
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        if (app.$cookies.get('token')) {
+            headers['Authorization'] = 'Bearer ' + app.$cookies.get('token');
+        }
+
+        // fetch pages
+        const pageResponse = await fetch(store.state.baseUrl + '/items/page?sort=status,-created_on&fields=id,title,status,created_on,category.id,created_by.last_name', {
+            headers,
+        });
+
+        const { data: pages } = await pageResponse.json();
+
+        return pages;
+    };
+
     export default {
         async asyncData ({ app, store }) {
-            const headers = {
-                'Content-Type': 'application/json',
-            };
-
-            if (app.$cookies.get('token')) {
-                headers['Authorization'] = 'Bearer ' + app.$cookies.get('token');
-            }
-
-            // fetch pages
-            const pageResponse = await fetch(store.state.baseUrl + '/items/page?sort=status,-created_on&fields=title,status,created_by.*', {
-                headers,
-            });
-
-            const { data: pages } = await pageResponse.json();
-
             return {
-                pages,
+                pages: await fetchPages(app, store),
             };
         },
         components: {
             NewestTopics,
             SideBar,
+        },
+        created () {
+            this.$store.subscribe(async (mutation) => {
+                if (mutation.type === 'toggleUserStateChange') {
+                    this.$nuxt.$loading.start();
+                    this.pages = await fetchPages(this, this.$store);
+                    this.$nuxt.$loading.finish();
+                }
+            });
         },
     };
 </script>

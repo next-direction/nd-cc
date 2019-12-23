@@ -20,8 +20,8 @@
                 return this.$store.state.user;
             },
             displayName () {
-                if (this.user.first_name || this.user.last_name) {
-                    return `${this.user.first_name} ${this.user.last_name}`.trim();
+                if (this.user.last_name) {
+                    return `${this.user.last_name}`.trim();
                 } else {
                     return this.user.email;
                 }
@@ -32,6 +32,7 @@
                 this.$cookies.remove('token');
                 this.$store.commit('setUser', null);
                 this.$store.commit('setAvatar', '');
+                this.$store.dispatch('userStateChanged');
             },
         },
     };

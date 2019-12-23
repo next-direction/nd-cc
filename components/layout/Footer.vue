@@ -12,36 +12,37 @@
 </template>
 
 <script>
-export default {}
+    export default {};
 </script>
 
 <style lang="scss" scoped>
-footer {
-  display: flex;
-  justify-content: space-between;
-  border-top: 2px solid $secondary-color;
-  font-size:1.1rem;
-  padding: 1.4rem;
-  box-shadow: 0 3px 6px rgba(0,0,0,.4) inset;
-  position: sticky;
-  bottom: 0;
-  background: white;
+  footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid $secondary-color;
+    font-size: 1.1rem;
+    padding: 1.4rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .4) inset;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 10;
 
-  .copy {
-    color: $secondary-color;
-  }
+    .copy {
+      color: $secondary-color;
+    }
 
-  .legal {
-    color: $main-color;
-
-    a {
-      text-decoration: none;
+    .legal {
       color: $main-color;
 
-      &:hover {
-        text-decoration: underline;
+      a {
+        text-decoration: none;
+        color: $main-color;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
-}
 </style>

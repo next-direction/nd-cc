@@ -1,4 +1,3 @@
-
 export default {
   mode: 'universal',
   /*
@@ -6,14 +5,17 @@ export default {
   */
   head: {
     title: 'Coding Community | Next Direction',
+    htmlAttrs: {
+      lang: 'en',
+    },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+    ],
   },
   /*
   ** Customize the progress-bar color
@@ -23,19 +25,20 @@ export default {
   ** Global CSS
   */
   css: [
-    { src: '~assets/style/main.scss', lang: 'sass'}
+    { src: '~assets/style/main.scss', lang: 'sass' },
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~plugins/refreshToken.js', mode: 'client' }
+    '~plugins/filter.js',
+    { src: '~plugins/refreshToken.js', mode: 'client' },
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    ['@nuxtjs/dotenv', { systemvars: true }]
+    ['@nuxtjs/dotenv', { systemvars: true }],
   ],
   /*
   ** Nuxt.js modules
@@ -43,17 +46,17 @@ export default {
   modules: [
     '@nuxtjs/style-resources',
     'nuxt-fontawesome',
-    'cookie-universal-nuxt'
+    'cookie-universal-nuxt',
   ],
 
   styleResources: {
     scss: [
-      '~assets/style/variables.scss'
+      '~assets/style/variables.scss',
     ],
   },
 
   fontawesome: {
-    component: "fa",
+    component: 'fa',
     imports: [],
   },
 
@@ -65,9 +68,9 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
-    }
+    },
   },
   env: {
-    baseUrl: process.env.BASE_URL || 'http://localhost/d-api-1/public/d-api-1'
-  }
-}
+    baseUrl: process.env.BASE_URL || 'http://localhost/d-api-1/public/d-api-1',
+  },
+};

@@ -3,11 +3,11 @@
     <form class="form" @submit.prevent="signInAction">
       <h1>Sign in</h1>
       <span class="form__close" @click="closeSignInForm">╳</span>
-      <div class="form__field">
+      <div class="form__field white">
         <input id="email-address" placeholder="Email address" v-model="email"/>
         <label for="email-address">Email address</label>
       </div>
-      <div class="form__field">
+      <div class="form__field white">
         <input id="password" type="password" placeholder="Password" v-model="password"/>
         <label for="password">Password</label>
       </div>
@@ -49,12 +49,14 @@
                         this.$cookies.set('token', result.data.token, {
                             sameSite: 'strict',
                             secure: 'https:' === window.location.protocol,
+                            path: '/',
                         });
 
                         const user = result.data.user;
 
                         this.$store.commit('setUser', user);
                         this.$registerRefreshHandler(result.data.token);
+                        this.$store.dispatch('userStateChanged');
 
                         if (user.avatar) {
                             this.$store.dispatch('fetchAvatar', { ...user, token: result.data.token });
@@ -67,6 +69,7 @@
                     this.password = '';
 
                     this.closeSignInForm();
+
                 } catch (e) {
                     alert(e.message);
                 }

@@ -4,9 +4,11 @@ export const state = () => ({
   backdrop: false,
   signUp: false,
   signIn: false,
+  userStateChange: false,
   baseUrl: '',
   user: null,
   avatar: '',
+  forwardTarget: '',
   categories: {
     all: [],
     parents: [],
@@ -26,8 +28,58 @@ export const getters = {
         ...getters.childCategories(child),
       ];
     });
-    console.log(children);
+
     return children;
+  },
+  getCategoryTree: state => categoryId => {
+    let category = state.categories.all.find(category => category.id === categoryId);
+
+    const categories = [{
+      id: category.id,
+      name: category.name,
+    }];
+    while (category && category.parent_category) {
+      const parent = category.parent_category;
+
+      category = state.categories.all.find(category => category.id === parent);
+
+      if (category) {
+        categories.unshift({
+          id: category.id,
+          name: category.name,
+        });
+      }
+    }
+
+    return categories;
+  },
+  getTextBreadcrumb: (state, getters) => (categoryId) => {
+    const categories = getters.getCategoryTree(categoryId);
+    let breadcrumb = '';
+
+    categories.forEach(category => {
+      if (breadcrumb) {
+        breadcrumb += ' » ';
+      }
+      breadcrumb += category.name;
+    });
+
+    return breadcrumb;
+  },
+  getCategoryOptions: (state, getters) => (parentId = 0, level = 0) => {
+    const options = [];
+
+    state.categories.all.filter(category => category.parent_category === parentId).forEach(category => {
+      options.push({
+        value: category.id,
+        text: category.name,
+        level,
+        allowed: category.pages_allowed,
+        children: getters.getCategoryOptions(category.id, level + 1),
+      });
+    });
+
+    return options;
   },
 };
 
@@ -61,6 +113,12 @@ export const mutations = {
 
     state.categories.parents = parentRelations;
   },
+  toggleUserStateChange (state) {
+    state.userStateChange = !state.userStateChange;
+  },
+  setForwardTarget (state, target) {
+    state.forwardTarget = target;
+  },
 };
 
 export const actions = {
@@ -68,7 +126,7 @@ export const actions = {
     commit('setBaseUrl', env.baseUrl);
 
     // fetch categories
-    const categoryResponse = await fetch(env.baseUrl + '/items/category', {
+    const categoryResponse = await fetch(env.baseUrl + '/items/category?sort=-order', {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -130,6 +188,9 @@ export const actions = {
       commit('setAvatar', avatar);
       resolve(avatar);
     });
+  },
+  userStateChanged ({ commit }) {
+    commit('toggleUserStateChange');
   },
 };
 

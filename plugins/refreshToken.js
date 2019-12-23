@@ -69,6 +69,7 @@ async function refresh () {
     appObject.$cookies.set('token', data.token, {
       sameSite: 'strict',
       secure: 'https:' === window.location.protocol,
+      path: '/',
     });
 
     const now = parseInt(Date.now() / 1000);
@@ -84,6 +85,7 @@ async function refresh () {
   appObject.$cookies.remove('token');
   storeObject.commit('setUser', null);
 
+  storeObject.dispatch('userStateChanged');
 }
 
 // allow registering handler after successful login

@@ -56,7 +56,7 @@
 
           &.nuxt-link-exact-active {
             border-right: 4px solid $main-color;
-            background: lighten($main-light, 25%);
+            background: $main-bg;
           }
         }
       }

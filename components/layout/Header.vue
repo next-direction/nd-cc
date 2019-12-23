@@ -42,15 +42,17 @@
 <style lang="scss" scoped>
   header {
     display: flex;
-    justify-content: space-between;
+    justify-content: stretch;
     padding: 0.6rem;
     border-bottom: 2px solid $main-color;
     background-color: white;
     box-shadow: 0 3px 6px rgba(0, 0, 0, .2);
     position: sticky;
     top: 0;
+    z-index: 10;
 
     .logo {
+      flex: 1 0 30%;
       display: flex;
       align-items: center;
 
@@ -77,13 +79,17 @@
     }
 
     .search {
+      flex: 1 0 30%;
       display: flex;
       align-items: center;
+      justify-content: center;
     }
 
     .user {
+      flex: 1 0 30%;
       display: flex;
       align-items: center;
+      justify-content: flex-end;
     }
   }
 </style>
