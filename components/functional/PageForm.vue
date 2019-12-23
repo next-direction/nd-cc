@@ -199,8 +199,11 @@
                 script = document.createElement('script');
                 script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/delimiter');
                 document.head.appendChild(script);
+            }
 
-                script = document.createElement('script');
+            if (!document.getElementById('detailScript')) {
+                let script = document.createElement('script');
+                script.setAttribute('id', 'detailScript');
                 script.setAttribute('src', '/script/code-plugin.js');
                 document.head.appendChild(script);
 
@@ -247,7 +250,7 @@
   #content-editor {
     width: 850px;
     background: #F6F6F6;
-    border-radius: 10px;
+    border-radius: $border-radius;
     margin: 10px auto;
   }
 

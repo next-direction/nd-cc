@@ -105,6 +105,7 @@
     background: $main-bg;
     padding: 0.6rem 1rem;
     color: $main-color;
+    border-radius: $border-radius;
 
     select {
       margin-left: 0.4rem;

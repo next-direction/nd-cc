@@ -1,40 +1,40 @@
 class CodePlugin {
   static enableLineBreaks = true;
+  static modes = [
+    ['ace/mode/c_cpp', 'C/C++'],
+    ['ace/mode/csharp', 'C#'],
+    ['ace/mode/css', 'CSS'],
+    ['ace/mode/diff', 'Diff'],
+    ['ace/mode/dockerfile', 'Docker'],
+    ['ace/mode/gitignore', 'Gitignore'],
+    ['ace/mode/golang', 'Go'],
+    ['ace/mode/html', 'HTML'],
+    ['ace/mode/java', 'Java'],
+    ['ace/mode/javascript', 'JavaScript'],
+    ['ace/mode/json', 'JSON'],
+    ['ace/mode/markdown', 'Markdown'],
+    ['ace/mode/perl', 'Perl'],
+    ['ace/mode/php', 'PHP'],
+    ['ace/mode/python', 'Python'],
+    ['ace/mode/smarty', 'Smarty'],
+    ['ace/mode/swift', 'Swift'],
+    ['ace/mode/sql', 'SQL'],
+    ['ace/mode/text', 'Text'],
+    ['ace/mode/twig', 'Twig'],
+    ['ace/mode/typescript', 'TypeScript'],
+    ['ace/mode/xml', 'XML'],
+    ['ace/mode/yaml', 'Yaml'],
+  ];
 
   constructor () {
     this.currentMode = 'ace/mode/text';
-    this.modes = [
-      ['ace/mode/c_cpp', 'C/C++'],
-      ['ace/mode/csharp', 'C#'],
-      ['ace/mode/css', 'CSS'],
-      ['ace/mode/diff', 'Diff'],
-      ['ace/mode/dockerfile', 'Docker'],
-      ['ace/mode/gitignore', 'Gitignore'],
-      ['ace/mode/golang', 'Go'],
-      ['ace/mode/html', 'HTML'],
-      ['ace/mode/java', 'Java'],
-      ['ace/mode/javascript', 'JavaScript'],
-      ['ace/mode/json', 'Json'],
-      ['ace/mode/markdown', 'Markdown'],
-      ['ace/mode/perl', 'Perl'],
-      ['ace/mode/php', 'PHP'],
-      ['ace/mode/python', 'Python'],
-      ['ace/mode/smarty', 'Smarty'],
-      ['ace/mode/swift', 'Swift'],
-      ['ace/mode/sql', 'SQL'],
-      ['ace/mode/text', 'Text'],
-      ['ace/mode/twig', 'Twig'],
-      ['ace/mode/typescript', 'TypeScript'],
-      ['ace/mode/xml', 'XML'],
-      ['ace/mode/yaml', 'Yaml'],
-    ];
   }
 
   render () {
     this.wrapper = document.createElement('div');
     this.wrapper.style.paddingBottom = '10px';
 
-    const currentMode = this.modes.find(mode => mode[0] === this.currentMode)[1];
+    const currentMode = CodePlugin.modes.find(mode => mode[0] === this.currentMode)[1];
 
     // mode display
     this.modeDisplay = document.createElement('div');
@@ -47,8 +47,7 @@ class CodePlugin {
     this.element = document.createElement('div');
     this.element.style.position = 'relative';
     this.element.style.height = '300px';
-    this.element.style.borderRadius = '10px';
-    this.element.style.boxShadow = '1px 1px 3px 1px grey';
+    this.element.style.borderRadius = '0.2rem';
 
     this.wrapper.appendChild(this.element);
 
@@ -74,19 +73,19 @@ class CodePlugin {
 
     let option;
 
-    this.modes.forEach(mode => {
+    CodePlugin.modes.forEach(mode => {
       option = document.createElement('option');
       option.value = mode[0];
       option.text = mode[1];
       select.appendChild(option);
     });
 
-    select.selectedIndex = this.modes.findIndex(mode => mode[0] === this.currentMode);
+    select.selectedIndex = CodePlugin.modes.findIndex(mode => mode[0] === this.currentMode);
 
     select.addEventListener('change', (e) => {
       this.currentMode = e.target.value;
       this.editor.session.setMode(e.target.value);
-      this.modeDisplay.innerText = this.modes.find(mode => mode[0] === e.target.value)[1];
+      this.modeDisplay.innerText = CodePlugin.modes.find(mode => mode[0] === e.target.value)[1];
     });
 
     wrapper.appendChild(select);
