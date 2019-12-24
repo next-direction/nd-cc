@@ -32,10 +32,10 @@
           </div>
         </template>
       </section>
-      <section class="answer">
+      <section class="answer" v-if="user && details.status !== 'draft'">
         <hr>
         <h4>New answer</h4>
-        <PageForm :onlyEditor="true" :category="details.category.id" :parent="details.id" :defaultTitle="getDefaultTitle()" @updateSaved="updateSaved"/>
+        <PageForm :onlyEditor="true" :category="'' + details.category.id" :parent="details.id" :defaultTitle="getDefaultTitle()" @updateSaved="updateSaved"/>
       </section>
     </div>
   </div>
@@ -96,12 +96,15 @@
                     faArrowCircleLeft,
                 };
             },
+            user () {
+                return this.$store.state.user;
+            },
         },
         created () {
             this.$store.subscribe(async (mutation) => {
                 if (mutation.type === 'toggleUserStateChange') {
                     if (!this.$store.state.user) {
-                        // TODO: some redirect if status is "draft" and no user is set
+                        this.$router.push('/');
                     }
                 }
             });
@@ -130,7 +133,7 @@
             },
             async updateSaved (saved) {
                 this.saved = saved;
-                console.log('saved', saved);
+
                 if (saved) {
                     this.details = await fetchPage(this, this.$store.state.baseUrl, this.$route.params.page);
                 }

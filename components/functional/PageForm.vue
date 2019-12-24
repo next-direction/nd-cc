@@ -22,7 +22,7 @@
             };
         },
         props: {
-            category: Number,
+            category: String,
             defaultTitle: {
                 type: String,
                 default: '',

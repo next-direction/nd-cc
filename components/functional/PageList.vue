@@ -10,7 +10,8 @@
             Created by <strong>{{ page.created_by.last_name }}</strong> on <strong>{{ page.created_on }}</strong> in <strong>{{ getCategoryTree(page.category.id)}}</strong>
           </p>
         </div>
-        <div class="page__answers">
+        <div class="page__answers" :title="hasAcceptedAnswer(page) ? 'Answer accepted' : ''"
+             :class="{ hasAnswers: page.children.length, hasAcceptedAnswer: hasAcceptedAnswer(page) }">
           <span class="page__answers-count">{{ page.children.length }}</span>
           <span class="page__answers-label">
             answers
@@ -30,6 +31,9 @@
         methods: {
             getCategoryTree (categoryId) {
                 return this.$store.getters.getTextBreadcrumb(categoryId);
+            },
+            hasAcceptedAnswer (page) {
+                return page.children && page.children.some(child => child.accepted);
             },
         },
     };
@@ -77,6 +81,16 @@
       justify-content: center;
       font-size: 0.8rem;
       padding: 0 0.6rem;
+      border-radius: 0 $border-radius $border-radius 0;
+
+      &.hasAnswers {
+        color: $success-dark;
+      }
+
+      &.hasAcceptedAnswer {
+        background: $success-light;
+        color: $success-dark;
+      }
 
       &-count {
         font-size: 1.4rem;
