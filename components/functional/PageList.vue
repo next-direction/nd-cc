@@ -2,12 +2,20 @@
   <div class="pages">
     <template v-if="pages.length">
       <div class="page" :class="{draft: page.status === 'draft', announcement: page.status === 'announcement'}" v-for="page in pages">
-        <p class="page-title">
-          <nuxt-link :to="'/page/detail/' + page.id">{{ page.title }}</nuxt-link>
-        </p>
-        <p class="page-meta">
-          Created by <strong>{{ page.created_by.last_name }}</strong> on <strong>{{ page.created_on }}</strong> in <strong>{{ getCategoryTree(page.category.id)}}
-        </strong></p>
+        <div class="page__info">
+          <p class="page__title">
+            <nuxt-link :to="'/page/detail/' + page.id">{{ page.title }}</nuxt-link>
+          </p>
+          <p class="page__meta">
+            Created by <strong>{{ page.created_by.last_name }}</strong> on <strong>{{ page.created_on }}</strong> in <strong>{{ getCategoryTree(page.category.id)}}</strong>
+          </p>
+        </div>
+        <div class="page__answers">
+          <span class="page__answers-count">{{ page.children.length }}</span>
+          <span class="page__answers-label">
+            answers
+          </span>
+        </div>
       </div>
     </template>
     <div class="no-page" v-else>
@@ -37,8 +45,13 @@
     border-left: 0.6rem solid $info-dark;
     margin-bottom: 1rem;
     border-radius: $border-radius;
+    display: flex;
 
-    .page-title {
+    .page__info {
+      flex: 1;
+    }
+
+    .page__title {
       padding: 0.4rem;
       font-weight: bold;
 
@@ -51,10 +64,23 @@
       }
     }
 
-    .page-meta {
+    .page__meta {
       padding: 0.4rem;
       color: grey;
       font-size: 0.8rem;
+    }
+
+    .page__answers {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      padding: 0 0.6rem;
+
+      &-count {
+        font-size: 1.4rem;
+      }
     }
 
     &.draft {

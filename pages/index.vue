@@ -19,9 +19,13 @@
         }
 
         // fetch pages
-        const pageResponse = await fetch(store.state.baseUrl + '/items/page?sort=status,-created_on&fields=id,title,status,created_on,category.id,created_by.last_name', {
-            headers,
-        });
+        const pageResponse = await fetch(
+            store.state.baseUrl
+            + '/items/page?sort=status,-created_on&fields=id,title,status,created_on,category.id,created_by.last_name,children.id&filter[parent_page][eq]=0',
+            {
+                headers,
+            },
+        );
 
         const { data: pages } = await pageResponse.json();
 

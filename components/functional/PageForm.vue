@@ -1,15 +1,15 @@
 <template>
   <form @submit.prevent="savePage">
-    <div class="form__field">
+    <div class="form__field" v-show="!onlyEditor">
       <input id="title" placeholder="Title" v-model="title" @input="$emit('updateSaved', false)"/>
       <label for="title">Title<span class="form__field--required"> *</span></label>
     </div>
     <div class="editor-container">
-      <span class="content-label">Content<span class="form__field--required"> *</span></span>
+      <span class="content-label" v-if="!onlyEditor">Content<span class="form__field--required"> *</span></span>
       <div id="content-editor"></div>
     </div>
     <div class="form__button">
-      <button class="success">Create</button>
+      <button class="success">Save</button>
     </div>
   </form>
 </template>
@@ -18,10 +18,24 @@
     export default {
         data () {
             return {
-                title: '',
+                title: this.defaultTitle,
             };
         },
-        props: ['category'],
+        props: {
+            category: Number,
+            defaultTitle: {
+                type: String,
+                default: '',
+            },
+            onlyEditor: {
+                type: Boolean,
+                default: false,
+            },
+            parent: {
+                type: Number,
+                default: 0,
+            },
+        },
         methods: {
             async savePage () {
                 const data = {
@@ -30,6 +44,14 @@
                     category: this.category,
                     content: await this.editor.save(),
                 };
+
+                if (!data.content.blocks.length) {
+                    alert('Please enter some content!');
+                }
+
+                if (this.parent) {
+                    data.parent_page = this.parent;
+                }
 
                 const res = await fetch(this.$store.state.baseUrl + '/items/page', {
                     method: 'POST',
@@ -42,8 +64,16 @@
                 const { data: newPage } = await res.json();
 
                 if (newPage && newPage.id) {
-                    this.$emit('updateSaved', true);
-                    this.$router.push('/page/detail/' + newPage.id);
+                    if (newPage.parent_page) {
+                        this.editor.blocks.clear();
+
+                        // wait, otherwise change event of clearing the blocks will set it to false again
+                        setTimeout(() => this.$emit('updateSaved', true), 1000);
+                    } else {
+                        this.$emit('updateSaved', true);
+                        this.$router.push('/page/detail/' + newPage.id);
+                    }
+
                 } else {
                     alert('Error during save!');
                 }
