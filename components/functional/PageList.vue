@@ -7,7 +7,8 @@
             <nuxt-link :to="'/page/detail/' + page.id">{{ page.title }}</nuxt-link>
           </p>
           <p class="page__meta">
-            Created by <strong>{{ page.created_by.last_name }}</strong> on <strong>{{ page.created_on }}</strong> in <strong>{{ getCategoryTree(page.category.id)}}</strong>
+            Created by <strong>{{ page.created_by.last_name }}</strong> at <strong>{{ page.created_on | formatDate }}</strong> in <strong>{{
+            getCategoryTree(page.category.id)}}</strong>
           </p>
         </div>
         <div class="page__answers" :title="hasAcceptedAnswer(page) ? 'Answer accepted' : ''"

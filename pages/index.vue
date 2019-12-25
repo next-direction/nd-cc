@@ -21,7 +21,7 @@
         // fetch pages
         const pageResponse = await fetch(
             store.state.baseUrl
-            + '/items/page?sort=status,-created_on&fields=id,title,status,created_on,category.id,created_by.last_name,children.id,children.accepted&filter[parent_page][eq]=0',
+            + '/items/page?sort=status,-created_on&fields=id,title,status,created_on,category.id,created_by.last_name,children.id,children.accepted&filter[parent_page][eq]=0&filter[status][neq]=announcement',
             {
                 headers,
             },

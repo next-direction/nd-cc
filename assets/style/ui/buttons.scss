@@ -92,4 +92,34 @@ button {
       background: $danger-dark;
     }
   }
+
+  &.warning {
+    border: 1px solid $warning-dark;
+    color: $warning-dark;
+
+    &:after {
+      background: lighten($warning-dark, 50%);
+    }
+
+    &:hover,
+    &:active {
+      color: white;
+      background: $warning-dark;
+    }
+  }
+
+  &.gray {
+    border: 1px solid $gray-dark;
+    color: $gray-dark;
+
+    &:after {
+      background: lighten($gray-dark, 50%);
+    }
+
+    &:hover,
+    &:active {
+      color: white;
+      background: $gray-dark;
+    }
+  }
 }

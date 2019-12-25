@@ -26,8 +26,9 @@ class CodePlugin {
     ['ace/mode/yaml', 'Yaml'],
   ];
 
-  constructor () {
-    this.currentMode = 'ace/mode/text';
+  constructor ({ data }) {
+    this.data = data;
+    this.currentMode = this.data.mode ? this.data.mode : 'ace/mode/text';
   }
 
   render () {
@@ -60,7 +61,11 @@ class CodePlugin {
     this.editor.renderer.updateFontSize();
 
     this.editor.setTheme('ace/theme/tomorrow_night');
-    this.editor.session.setMode(this.currentMode);
+    this.editor.session.setMode(this.data.mode ? this.data.mode : this.currentMode);
+
+    if (this.data.content) {
+      this.editor.session.setValue(this.data.content);
+    }
 
     return this.wrapper;
   }

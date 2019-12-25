@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="savePage">
+  <form @submit.prevent="defaultData && Object.keys(defaultData).length ? updatePage() : savePage()">
     <div class="form__field" v-show="!onlyEditor">
       <input id="title" placeholder="Title" v-model="title" @input="$emit('updateSaved', false)"/>
       <label for="title">Title<span class="form__field--required"> *</span></label>
@@ -10,6 +10,7 @@
     </div>
     <div class="form__button">
       <button class="success">Save</button>
+      <button type="button" class="gray" v-if="showCancel" @click="$emit('cancelForm')">Cancel</button>
     </div>
   </form>
 </template>
@@ -27,13 +28,29 @@
                 type: String,
                 default: '',
             },
+            defaultData: {
+                type: Object,
+                default: () => {},
+            },
             onlyEditor: {
                 type: Boolean,
                 default: false,
             },
+            pageId: {
+                type: Number,
+                default: 0,
+            },
             parent: {
                 type: Number,
                 default: 0,
+            },
+            placeholder: {
+                type: String,
+                default: 'Click here to start your topic',
+            },
+            showCancel: {
+                type: Boolean,
+                default: false,
             },
         },
         methods: {
@@ -53,29 +70,62 @@
                     data.parent_page = this.parent;
                 }
 
-                const res = await fetch(this.$store.state.baseUrl + '/items/page', {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + this.$cookies.get('token'),
-                    },
-                });
-                const { data: newPage } = await res.json();
+                try {
+                    const res = await fetch(this.$store.state.baseUrl + '/items/page?fields=*,created_by.last_name,created_by.id', {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + this.$cookies.get('token'),
+                        },
+                    });
+                    const { data: newPage } = await res.json();
 
-                if (newPage && newPage.id) {
-                    if (newPage.parent_page) {
-                        this.editor.blocks.clear();
+                    if (newPage && newPage.id) {
+                        if (newPage.parent_page) {
+                            this.editor.blocks.clear();
+                            this.$emit('pageSaved', newPage);
 
-                        // wait, otherwise change event of clearing the blocks will set it to false again
-                        setTimeout(() => this.$emit('updateSaved', true), 1000);
+                            // wait, otherwise change event of clearing the blocks will set it to false again
+                            setTimeout(() => this.$emit('updateSaved', true), 1000);
+                        } else {
+                            this.$emit('updateSaved', true);
+                            this.$router.push('/page/detail/' + newPage.id);
+                        }
+
                     } else {
-                        this.$emit('updateSaved', true);
-                        this.$router.push('/page/detail/' + newPage.id);
+                        alert('Error during save!');
                     }
+                } catch (e) {
+                    alert(e.message);
+                }
+            },
+            async updatePage () {
+                const data = {
+                    title: this.title,
+                    content: await this.editor.save(),
+                    category: this.category,
+                };
 
-                } else {
-                    alert('Error during save!');
+                if (!data.content.blocks.length) {
+                    alert('Please enter some content!');
+                }
+
+                try {
+                    const res = await fetch(`${this.$store.state.baseUrl}/items/page/${this.pageId}?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id`, {
+                        method: 'PATCH',
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + this.$cookies.get('token'),
+                        },
+                    });
+                    const { data: editedPage } = await res.json();
+
+                    this.$emit('pageSaved', editedPage);
+                    this.$emit('updateSaved', true);
+                } catch (e) {
+                    alert(e.message);
                 }
             },
             initEditor () {
@@ -86,7 +136,8 @@
                      * Id of Element that should contain Editor instance
                      */
                     holder: 'content-editor',
-                    placeholder: 'Click here to start your topic',
+                    data: this.defaultData,
+                    placeholder: this.placeholder,
                     onChange: () => {
                         this.$emit('updateSaved', false);
                     },
@@ -278,7 +329,7 @@
   }
 
   #content-editor {
-    width: 850px;
+    width: 100%;
     background: #F6F6F6;
     border-radius: $border-radius;
     margin: 10px auto;
