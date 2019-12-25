@@ -20,7 +20,7 @@
         @updateSaved="updateEditSaved"
         :pageId="+details.id"
       />
-      <Answers :details="details"/>
+      <Answers :details="details" @updateChild="updateChild" :accepted="hasAcceptedAnswer"/>
       <NewAnswer :details="details" @pageSaved="showSavedPage" @updateSaved="updateSaved"/>
     </div>
   </div>
@@ -42,9 +42,14 @@
             headers['Authorization'] = 'Bearer ' + app.$cookies.get('token');
         }
 
-        const categoryResponse = await fetch(baseUrl + '/items/page/' + pageId + '?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,category.id,children.*,children.created_by.last_name', {
-            headers,
-        });
+        const categoryResponse = await fetch(
+            baseUrl
+            + '/items/page/' + pageId + '?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,category.id,'
+            + 'children.*,children.created_by.last_name,children.created_by.id,children.modified_by.last_name,children.modified_on',
+            {
+                headers,
+            },
+        );
 
         const { data: pageData } = await categoryResponse.json();
 
@@ -69,6 +74,9 @@
                     faArrowCircleLeft,
                 };
             },
+            hasAcceptedAnswer () {
+                return this.details.children.some(child => child.accepted);
+            },
         },
         created () {
             this.$store.subscribe(async (mutation) => {
@@ -78,12 +86,52 @@
                     }
                 }
             });
+
+            this.$nuxt.$on('toggleAnswerAccept', answer => {
+                if (this.acceptRequestRunning) {
+                    return;
+                }
+
+                this.acceptRequestRunning = true;
+
+                const promises = this.details.children.map(async child => {
+                    if (child.id === answer.id) {
+                        const data = {
+                            accepted: !child.accepted,
+                        };
+
+                        try {
+                            await fetch(`${this.$store.state.baseUrl}/items/page/${child.id}?fields=id`, {
+                                method: 'PATCH',
+                                body: JSON.stringify(data),
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + this.$cookies.get('token'),
+                                },
+                            });
+
+                            child.accepted = !child.accepted;
+                        } catch (e) {
+                            alert(e.message);
+                        }
+
+                    }
+
+                    return child;
+                });
+
+                Promise.all(promises).then(children => {
+                    this.details.children = children;
+                    this.acceptRequestRunning = false;
+                }).catch(e => alert(e.message));
+            });
         },
         data () {
             return {
                 saved: true,
                 editSaved: true,
                 editMode: false,
+                acceptRequestRunning: false,
             };
         },
         methods: {
@@ -103,6 +151,11 @@
             },
             showSavedPage (page) {
                 this.details.children.push(page);
+            },
+            updateChild (page) {
+                this.details.children = this.details.children.map(child => {
+                    return child.id === page.id ? page : child;
+                });
             },
             updateEditSaved (saved) {
                 this.editSaved = saved;

@@ -13,6 +13,11 @@ button {
   text-decoration: none;
   overflow: hidden;
 
+  &.small {
+    font-size: 0.8em;
+    padding: 0.2rem 0.6rem;
+  }
+
   &:after {
     content: "";
     display: block;

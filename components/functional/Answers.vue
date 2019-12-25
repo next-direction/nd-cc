@@ -5,24 +5,26 @@
     </div>
     <template v-for="child in details.children">
       <hr>
-      <div class="answers__answer">
-        <Blocks :blocks="child.content.blocks" :class="{ acceptedAnswer: child.accepted }"/>
-        <p class="meta">
-          Answered by <strong>{{ child.created_by.last_name }}</strong> at <strong>{{ child.created_on | formatDate }}</strong>
-        </p>
-      </div>
+      <Answer :details="child" @updateChild="updateChild" :accepted="accepted"/>
     </template>
   </section>
 </template>
 
 <script>
+    import Answer from '~/components/functional/Answer.vue';
     import Blocks from '~/components/content/Blocks.vue';
 
     export default {
         components: {
+            Answer,
             Blocks,
         },
-        props: ['details'],
+        methods: {
+            updateChild (page) {
+                this.$emit('updateChild', page);
+            },
+        },
+        props: ['accepted', 'details'],
     };
 </script>
 
@@ -45,11 +47,18 @@
         background: $success-light;
       }
 
-      .meta {
-        margin: 1rem 0;
-        color: grey;
-        font-size: 0.8rem;
-        text-align: right;
+      .answer__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &-meta {
+          flex: 1;
+          margin: 1rem 0;
+          color: grey;
+          font-size: 0.8rem;
+          text-align: right;
+        }
       }
     }
   }

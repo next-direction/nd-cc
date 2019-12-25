@@ -3,19 +3,19 @@
     <form class="form" @submit.prevent="register">
       <h1>Sign up</h1>
       <span class="form__close" @click="closeSignUpForm">╳</span>
-      <div class="form__field">
+      <div class="form__field white">
         <input id="signup-email" placeholder="Email address" v-model="email"/>
         <label for="signup-email">Email address</label>
       </div>
-      <div class="form__field">
+      <div class="form__field white">
         <input id="username" placeholder="Username" v-model="username"/>
         <label for="username">Username</label>
       </div>
-      <div class="form__field">
+      <div class="form__field white">
         <input id="signup-password" type="password" placeholder="Password" v-model="password"/>
         <label for="signup-password">Password</label>
       </div>
-      <div class="form__field">
+      <div class="form__field white">
         <input id="signup-confirm-password" type="password" placeholder="Confirm password"/>
         <label for="signup-confirm-password">Confirm password</label>
       </div>
