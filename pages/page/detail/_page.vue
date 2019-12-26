@@ -45,7 +45,8 @@
         const categoryResponse = await fetch(
             baseUrl
             + '/items/page/' + pageId + '?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,category.id,'
-            + 'children.*,children.created_by.last_name,children.created_by.id,children.modified_by.last_name,children.modified_on',
+            + 'children.*,children.created_by.last_name,children.created_by.id,children.modified_by.last_name,children.modified_on,'
+            + 'votes.*',
             {
                 headers,
             },

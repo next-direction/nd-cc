@@ -34,5 +34,9 @@
 </script>
 
 <style lang="scss" scoped>
-
+  .content {
+    :first-child {
+      margin-top: 0;
+    }
+  }
 </style>

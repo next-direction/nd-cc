@@ -3,7 +3,7 @@
     <div class="answers__answer-container" :class="{ acceptedAnswer: details.accepted }" v-if="!editMode">
       <div class="answers__options">
         <fa :icon="fa.faCheck" v-if="details.accepted" class="acceptedIcon" title="Remove acceptance" @click="toggleAccept(details)"></fa>
-        <fa :icon="fa.faCheck" v-if="!details.accepted && !accepted" class="acceptIcon" title="Accept this answer" @click="toggleAccept(details)"></fa>
+        <fa :icon="fa.faCheck" v-if="!details.accepted && !accepted && user" class="acceptIcon" title="Accept this answer" @click="toggleAccept(details)"></fa>
       </div>
       <div class="answers__answer">
         <Blocks :blocks="details.content.blocks"/>
@@ -59,6 +59,9 @@
                     faCheck,
                 };
             },
+            user () {
+                return this.$store.state.user;
+            },
         },
         data () {
             return {
@@ -71,7 +74,10 @@
                 this.$store.commit('page/clearAnswerEditSaved', this.details.id);
             },
             toggleAccept (answer) {
-                this.$store.dispatch('page/toggleAcceptAnswer', { vm: this, answer });
+
+                if (this.user) {
+                    this.$store.dispatch('page/toggleAcceptAnswer', { vm: this, answer });
+                }
             },
             updateEditSaved (saved) {
                 if (saved) {
