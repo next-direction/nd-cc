@@ -5,7 +5,7 @@
     </div>
     <template v-for="child in details.children">
       <hr>
-      <Answer :details="child" @updateChild="updateChild" :accepted="accepted"/>
+      <Answer :details="child"/>
     </template>
   </section>
 </template>
@@ -19,12 +19,11 @@
             Answer,
             Blocks,
         },
-        methods: {
-            updateChild (page) {
-                this.$emit('updateChild', page);
+        computed: {
+            details () {
+                return this.$store.state.page.details;
             },
         },
-        props: ['accepted', 'details'],
     };
 </script>
 

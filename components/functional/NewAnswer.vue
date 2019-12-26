@@ -21,6 +21,9 @@
             PageForm,
         },
         computed: {
+            details () {
+                return this.$store.state.page.details;
+            },
             user () {
                 return this.$store.state.user;
             },
@@ -30,13 +33,12 @@
                 return `answer-${this.details.id}-${Math.floor(Date.now() / 1000)}`;
             },
             pageSaved (page) {
-                this.$emit('pageSaved', page);
+                this.$store.commit('page/addChild', page);
             },
             updateSaved (state) {
                 this.$emit('updateSaved', state);
             },
         },
-        props: ['details'],
     };
 </script>
 

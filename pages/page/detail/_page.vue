@@ -8,7 +8,7 @@
       </h1>
     </nav>
     <div class="detail-page-content">
-      <Question :details="details" v-if="!editMode" @edit="editMode = true"/>
+      <Question v-if="!editMode" @edit="editMode = true"/>
       <PageForm
         v-if="editMode"
         :showCancel="true"
@@ -20,8 +20,8 @@
         @updateSaved="updateEditSaved"
         :pageId="+details.id"
       />
-      <Answers :details="details" @updateChild="updateChild" :accepted="hasAcceptedAnswer"/>
-      <NewAnswer :details="details" @pageSaved="showSavedPage" @updateSaved="updateSaved"/>
+      <Answers/>
+      <NewAnswer @updateSaved="updateSaved"/>
     </div>
   </div>
 </template>
@@ -57,10 +57,10 @@
     };
 
     export default {
-        async asyncData ({ app, env, params }) {
-            return {
-                details: await fetchPage(app, env.baseUrl, params.page),
-            };
+        async fetch ({ app, env, params, store }) {
+            const details = await fetchPage(app, env.baseUrl, params.page);
+
+            store.commit('page/setDetails', details);
         },
         components: {
             Answers,
@@ -69,13 +69,16 @@
             Question,
         },
         computed: {
+            details () {
+                return this.$store.state.page.details;
+            },
+            editAnswerActive () {
+                return this.$store.getters['page/editAnswerActive'];
+            },
             fa () {
                 return {
                     faArrowCircleLeft,
                 };
-            },
-            hasAcceptedAnswer () {
-                return this.details.children.some(child => child.accepted);
             },
         },
         created () {
@@ -87,44 +90,7 @@
                 }
             });
 
-            this.$nuxt.$on('toggleAnswerAccept', answer => {
-                if (this.acceptRequestRunning) {
-                    return;
-                }
-
-                this.acceptRequestRunning = true;
-
-                const promises = this.details.children.map(async child => {
-                    if (child.id === answer.id) {
-                        const data = {
-                            accepted: !child.accepted,
-                        };
-
-                        try {
-                            await fetch(`${this.$store.state.baseUrl}/items/page/${child.id}?fields=id`, {
-                                method: 'PATCH',
-                                body: JSON.stringify(data),
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer ' + this.$cookies.get('token'),
-                                },
-                            });
-
-                            child.accepted = !child.accepted;
-                        } catch (e) {
-                            alert(e.message);
-                        }
-
-                    }
-
-                    return child;
-                });
-
-                Promise.all(promises).then(children => {
-                    this.details.children = children;
-                    this.acceptRequestRunning = false;
-                }).catch(e => alert(e.message));
-            });
+            this.$store.commit('page/clearAnswerEditSaved');
         },
         data () {
             return {
@@ -149,22 +115,11 @@
                     this.$router.back();
                 }
             },
-            showSavedPage (page) {
-                this.details.children.push(page);
-            },
-            updateChild (page) {
-                this.details.children = this.details.children.map(child => {
-                    return child.id === page.id ? page : child;
-                });
-            },
             updateEditSaved (saved) {
                 this.editSaved = saved;
             },
             updatePage (page) {
-                this.details.title = page.title;
-                this.details.content = page.content;
-                this.details.modified_by = page.modified_by;
-                this.details.modified_on = page.modified_on;
+                this.$store.commit('page/updatePage', page);
                 this.editMode = false;
             },
             updateSaved (saved) {
@@ -172,7 +127,7 @@
             },
         },
         beforeRouteLeave (to, from, next) {
-            if ((this.saved && this.editSaved) || window.confirm('Do you really want to leave? You have unsaved changes!')) {
+            if ((this.saved && this.editSaved && !this.editAnswerActive) || window.confirm('Do you really want to leave? You have unsaved changes!')) {
                 next();
             } else {
                 next(false);

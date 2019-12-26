@@ -27,10 +27,10 @@
         :showCancel="true"
         @cancelForm="cancelEditMode"
         @pageSaved="updatePage"
+        @updateSaved="updateEditSaved"
         :category="'' + details.category.id"
         :defaultTitle="details.title"
         :defaultData="details.content"
-        @updateSaved="updateEditSaved"
         :pageId="+details.id"
       />
     </div>
@@ -43,18 +43,14 @@
     import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
     export default {
-        beforeRouteLeave (to, from, next) {
-            if (this.editSaved || window.confirm('Do you really want to leave? You have unsaved changes!')) {
-                next();
-            } else {
-                next(false);
-            }
-        },
         components: {
             Blocks,
             PageForm,
         },
         computed: {
+            accepted () {
+                return this.$store.getters['page/hasAcceptedAnswer'];
+            },
             editable () {
                 return this.$store.state.user && +this.$store.state.user.id === +this.details.created_by.id;
             },
@@ -67,26 +63,29 @@
         data () {
             return {
                 editMode: false,
-                editSaved: true,
             };
         },
         methods: {
             cancelEditMode () {
                 this.editMode = false;
+                this.$store.commit('page/clearAnswerEditSaved', this.details.id);
             },
             toggleAccept (answer) {
-                this.$nuxt.$emit('toggleAnswerAccept', answer);
+                this.$store.dispatch('page/toggleAcceptAnswer', { vm: this, answer });
             },
             updateEditSaved (saved) {
-                this.editSaved = saved;
+                if (saved) {
+                    this.$store.commit('page/clearAnswerEditSaved', this.details.id);
+                } else {
+                    this.$store.commit('page/setAnswerEditSaved', this.details.id);
+                }
             },
             updatePage (page) {
-                this.$emit('updateChild', page);
-                this.editSaved = true;
+                this.$store.commit('page/updateChild', page);
                 this.editMode = false;
             },
         },
-        props: ['accepted', 'details'],
+        props: ['details'],
     };
 </script>
 
@@ -100,6 +99,10 @@
 
     .acceptedAnswer {
       background: $success-light;
+
+      .answer__footer-meta {
+        color: $success-dark;
+      }
     }
 
     .answers__answer-container {

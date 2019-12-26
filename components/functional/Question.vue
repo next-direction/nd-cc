@@ -25,6 +25,9 @@
             Blocks,
         },
         computed: {
+            details () {
+                return this.$store.state.page.details;
+            },
             editable () {
                 return this.$store.state.user && +this.details.created_by.id === +this.$store.state.user.id;
             },
@@ -34,7 +37,6 @@
                 return this.$store.getters.getTextBreadcrumb(categoryId);
             },
         },
-        props: ['details'],
     };
 </script>
 
