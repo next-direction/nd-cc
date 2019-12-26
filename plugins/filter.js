@@ -13,3 +13,11 @@ Vue.filter('formatDate', dateString => {
 
   return date.toLocaleString();
 });
+
+Vue.filter('excerpt', text => {
+  if (text.length > 200) {
+    text = text.substring(0, 200).trim() + '...';
+  }
+
+  return text;
+});

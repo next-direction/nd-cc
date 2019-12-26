@@ -6,6 +6,9 @@
           <p class="page__title">
             <nuxt-link :to="'/page/detail/' + page.id">{{ page.title }}</nuxt-link>
           </p>
+          <p class="page__excerpt">
+            <Excerpt :blocks="page.content.blocks"/>
+          </p>
           <p class="page__meta">
             Created by <strong>{{ page.created_by.last_name }}</strong> at <strong>{{ page.created_on | formatDate }}</strong> in <strong>{{
             getCategoryTree(page.category.id)}}</strong>
@@ -33,7 +36,12 @@
 </template>
 
 <script>
+    import Excerpt from '~/components/content/Excerpt.vue';
+
     export default {
+        components: {
+            Excerpt,
+        },
         methods: {
             getCategoryTree (categoryId) {
                 return this.$store.getters.getTextBreadcrumb(categoryId);

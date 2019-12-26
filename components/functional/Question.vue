@@ -14,7 +14,7 @@
       </span>
     </p>
     <div class="question__content">
-      <div class="question__content-actions">
+      <div class="question__content-actions" v-if="details.status !== 'draft'">
         <span class="action-vote-up" :class="{ currentVote: currentVote === 1 }" title="Vote up" @click="vote(1)">
           <fa :icon="fa.faChevronUp"></fa>
         </span>
