@@ -11,6 +11,12 @@
             getCategoryTree(page.category.id)}}</strong>
           </p>
         </div>
+        <div class="page__votes">
+          <span class="page__votes-count">{{ sumVotes(page) }}</span>
+          <span class="page__votes-label">
+            votes
+          </span>
+        </div>
         <div class="page__answers" :title="hasAcceptedAnswer(page) ? 'Answer accepted' : ''"
              :class="{ hasAnswers: page.children.length, hasAcceptedAnswer: hasAcceptedAnswer(page) }">
           <span class="page__answers-count">{{ page.children.length }}</span>
@@ -28,7 +34,6 @@
 
 <script>
     export default {
-        props: ['pages'],
         methods: {
             getCategoryTree (categoryId) {
                 return this.$store.getters.getTextBreadcrumb(categoryId);
@@ -36,7 +41,11 @@
             hasAcceptedAnswer (page) {
                 return page.children && page.children.some(child => child.accepted);
             },
+            sumVotes (page) {
+                return page.votes.reduce((acc, current) => acc + current.vote, 0);
+            },
         },
+        props: ['pages'],
     };
 </script>
 
@@ -73,6 +82,20 @@
       padding: 0.4rem;
       color: grey;
       font-size: 0.8rem;
+    }
+
+    .page__votes {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      padding: 0 0.8rem;
+      border-radius: 0 $border-radius $border-radius 0;
+
+      &-count {
+        font-size: 1.4rem;
+      }
     }
 
     .page__answers {

@@ -5,15 +5,42 @@ export const state = () => ({
 
 export const getters = {
   editAnswerActive: state => state.answersEditSaved.length > 0,
-  getVotes: state => state.details.votes.reduce((acc, current) => acc + current.vote, 0),
+  getVotes: state => (parentPage = 0) => {
+    let votes = 0;
+
+    if (0 === parentPage) { // votes for question
+      votes = state.details.votes ? state.details.votes.reduce((acc, current) => acc + current.vote, 0) : 0;
+    } else { // votes for answer
+      const child = state.details.children.find(child => +child.id === +parentPage);
+
+      votes = child.votes ? child.votes.reduce((acc, current) => acc + current.vote, 0) : 0;
+    }
+
+    return votes;
+  },
   hasAcceptedAnswer: state => state.details.children.some(child => child.accepted),
-  hasVote: state => user => {
-    const vote = state.details.votes.find(vote => +vote.created_by === +user.id);
+  hasVote: state => (user, parentPage = 0) => {
+    let vote;
+    if (0 === parentPage) { // vote of question
+      vote = state.details.votes.find(vote => +vote.created_by === +user.id);
+    } else { // get vote for answer
+      const child = state.details.children.find(child => +child.id === +parentPage);
+
+      if (child) {
+        vote = child.votes.find(vote => +vote.created_by === +user.id);
+      }
+    }
 
     return vote ? vote.vote : 0;
   },
-  getVote: state => user => {
-    return state.details.votes.find(vote => +vote.created_by === +user.id);
+  getVote: state => (user, parentPage = 0) => {
+    if (0 === parentPage) {
+      return state.details.votes.find(vote => +vote.created_by === +user.id);
+    } else {
+      const child = state.details.children.find(child => +child.id === +parentPage);
+
+      return child.votes.find(vote => +vote.created_by === +user.id);
+    }
   },
 };
 
@@ -22,10 +49,30 @@ export const mutations = {
     state.details.children.push(child);
   },
   addVote (state, vote) {
-    state.details.votes.push(vote);
+    if (+state.details.id === +vote.page) {
+      state.details.votes.push(vote);
+    } else { // add to answer
+      state.details.children = state.details.children.map(child => {
+        if (+child.id === +vote.page) {
+          child.votes.push(vote);
+        }
+
+        return child;
+      });
+    }
   },
   deleteVote (state, vote) {
-    state.details.votes = state.details.votes.filter(existingVote => +existingVote.id !== +vote.id);
+    if (+state.details.id === +vote.page) {
+      state.details.votes = state.details.votes.filter(existingVote => +existingVote.id !== +vote.id);
+    } else { // remove from answer
+      state.details.children = state.details.children.map(child => {
+        if (+child.id === +vote.page) {
+          child.votes = child.votes.filter(existing => existing.id !== vote.id);
+        }
+
+        return child;
+      });
+    }
   },
   clearAnswerEditSaved (state, id) {
     if (id) {
@@ -57,9 +104,19 @@ export const mutations = {
     state.details.modified_on = page.modified_on;
   },
   updateVote (state, editedVote) {
-    state.details.votes = state.details.votes.map(vote => {
-      return vote.id === editedVote.id ? editedVote : vote;
-    });
+    if (+state.details.id === +editedVote.page) {
+      state.details.votes = state.details.votes.map(vote => {
+        return vote.id === editedVote.id ? editedVote : vote;
+      });
+    } else { // update vote for answer
+      state.details.children = state.details.children.map(child => {
+        if (+child.id === +editedVote.page) {
+          child.votes = child.votes.map(existing => existing.id === editedVote.id ? editedVote : existing);
+        }
+
+        return child;
+      });
+    }
   },
 };
 
@@ -107,12 +164,12 @@ export const actions = {
     }).catch(e => alert(e.message));
   },
 
-  async addVote ({ commit, getters, rootState, state }, { vm: app, vote }) {
-    if (0 === getters.hasVote(rootState.user)) { // first time voter
+  async addVote ({ commit, getters, rootState, state }, { vm: app, vote, page, isQuestion }) {
+    if (0 === getters.hasVote(rootState.user, isQuestion ? 0 : page)) { // first time voter
       try {
         const data = {
           vote,
-          page: state.details.id,
+          page,
         };
 
         const res = await fetch(rootState.baseUrl + '/items/vote', {
@@ -134,7 +191,7 @@ export const actions = {
         alert(e.message);
       }
     } else { // edit existing vote
-      const existingVote = getters.getVote(rootState.user);
+      const existingVote = getters.getVote(rootState.user, isQuestion ? 0 : page);
 
       if (+vote === +existingVote.vote) { // remove vote
         try {

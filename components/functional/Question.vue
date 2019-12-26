@@ -58,7 +58,7 @@
                 return this.$store.state.user;
             },
             votes () {
-                return this.$store.getters['page/getVotes'];
+                return this.$store.getters['page/getVotes']();
             },
         },
         methods: {
@@ -67,7 +67,12 @@
             },
             vote (vote) {
                 if (this.user) {
-                    this.$store.dispatch('page/addVote', { vm: this, vote });
+
+                    if (this.user.id !== this.details.created_by.id) {
+                        this.$store.dispatch('page/addVote', { vm: this, vote, page: this.details.id, isQuestion: true });
+                    } else {
+                        alert('You cannot vote for your own questions!');
+                    }
                 } else {
                     alert('Please login to vote!');
                 }

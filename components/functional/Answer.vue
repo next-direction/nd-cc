@@ -2,8 +2,15 @@
   <div>
     <div class="answers__answer-container" :class="{ acceptedAnswer: details.accepted }" v-if="!editMode">
       <div class="answers__options">
+        <span class="action-vote-up" :class="{ currentVote: currentVote === 1 }" title="Vote up" @click="vote(1)">
+          <fa :icon="fa.faChevronUp"></fa>
+        </span>
+        <span class="action-vote-num">{{ votes }}</span>
+        <span class="action-vote-down" :class="{ currentVote: currentVote === -1 }" title="Vote down" @click="vote(-1)">
+          <fa :icon="fa.faChevronDown"></fa>
+        </span>
         <fa :icon="fa.faCheck" v-if="details.accepted" class="acceptedIcon" title="Remove acceptance" @click="toggleAccept(details)"></fa>
-        <fa :icon="fa.faCheck" v-if="!details.accepted && !accepted && user" class="acceptIcon" title="Accept this answer" @click="toggleAccept(details)"></fa>
+        <fa :icon="fa.faCheck" v-if="canAccept" class="acceptIcon" title="Accept this answer" @click="toggleAccept(details)"></fa>
       </div>
       <div class="answers__answer">
         <Blocks :blocks="details.content.blocks"/>
@@ -40,7 +47,7 @@
 <script>
     import Blocks from '~/components/content/Blocks.vue';
     import PageForm from '~/components/functional/PageForm.vue';
-    import { faCheck } from '@fortawesome/free-solid-svg-icons';
+    import { faCheck, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         components: {
@@ -51,16 +58,27 @@
             accepted () {
                 return this.$store.getters['page/hasAcceptedAnswer'];
             },
+            canAccept () {
+                return !this.details.accepted && !this.accepted && this.user && +this.details.created_by.id === +this.user.id;
+            },
+            currentVote () {
+                return this.$store.state.user ? this.$store.getters['page/hasVote'](this.$store.state.user, this.details.id) : 0;
+            },
             editable () {
                 return this.$store.state.user && +this.$store.state.user.id === +this.details.created_by.id;
             },
             fa () {
                 return {
                     faCheck,
+                    faChevronUp,
+                    faChevronDown,
                 };
             },
             user () {
                 return this.$store.state.user;
+            },
+            votes () {
+                return this.$store.getters['page/getVotes'](this.details.id);
             },
         },
         data () {
@@ -90,20 +108,29 @@
                 this.$store.commit('page/updateChild', page);
                 this.editMode = false;
             },
+            vote (vote) {
+                if (this.user) {
+
+                    if (this.user.id !== this.details.created_by.id) {
+                        this.$store.dispatch('page/addVote', { vm: this, vote, page: this.details.id, isQuestion: false });
+                    } else {
+                        alert('You cannot vote for your own answer!');
+                    }
+                } else {
+                    alert('Please login to vote!');
+                }
+            },
         },
         props: ['details'],
     };
 </script>
 
 <style lang="scss" scoped>
-  .answers {
-    hr {
-      margin: 1rem 0;
-      border: none;
-      border-bottom: 1px solid $main-light;
-    }
+  .answers__answer-container {
+    display: flex;
+    padding: 0.6rem 0.6rem 0.6rem 0;
 
-    .acceptedAnswer {
+    &.acceptedAnswer {
       background: $success-light;
 
       .answer__footer-meta {
@@ -111,54 +138,65 @@
       }
     }
 
-    .answers__answer-container {
+    .answers__options {
+      flex: 0 0 3rem;
+      padding: 0 0.6rem;
+
       display: flex;
-      padding-right: 0.6rem;
+      flex-direction: column;
+      align-items: center;
 
-      .answers__options {
-        flex: 0 0 3rem;
-        padding: 0.6rem;
+      .action-vote-down {
+        display: block;
+        margin-bottom: 0.4rem;
+      }
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      .action-vote-up,
+      .action-vote-down {
+        color: $gray-dark;
+        font-size: 1.2rem;
+        cursor: pointer;
 
-        .acceptedIcon {
+        &.currentVote {
           color: $success-dark;
-          font-size: 1.6rem;
-          cursor: pointer;
-        }
-
-        .acceptIcon {
-          color: $gray-dark;
-          font-size: 1.6rem;
-          cursor: pointer;
         }
       }
+
+      .action-vote-num {
+        font-size: 1.2rem;
+      }
+
+      .acceptedIcon {
+        color: $success-dark;
+        font-size: 1.6rem;
+        cursor: pointer;
+      }
+
+      .acceptIcon {
+        color: $gray-dark;
+        font-size: 1.6rem;
+        cursor: pointer;
+      }
     }
+  }
 
-    &__count {
-      margin-top: 2rem;
-    }
+  .answers__answer {
+    flex: 1;
 
-    &__answer {
-      flex: 1;
+    .answer__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.8rem;
 
-      .answer__footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+      &-meta {
+        flex: 1;
+        color: grey;
+        font-size: 0.8rem;
+        text-align: right;
 
-        &-meta {
-          flex: 1;
-          margin: 1rem 0;
-          color: grey;
-          font-size: 0.8rem;
-          text-align: right;
-
-          .meta--modified {
-            display: block;
-          }
+        .meta--modified {
+          display: block;
         }
       }
     }

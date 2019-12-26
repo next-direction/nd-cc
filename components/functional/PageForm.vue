@@ -64,6 +64,7 @@
 
                 if (!data.content.blocks.length) {
                     alert('Please enter some content!');
+                    return;
                 }
 
                 if (this.parent) {
@@ -112,7 +113,7 @@
                 }
 
                 try {
-                    const res = await fetch(`${this.$store.state.baseUrl}/items/page/${this.pageId}?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id`, {
+                    const res = await fetch(`${this.$store.state.baseUrl}/items/page/${this.pageId}?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,votes.*`, {
                         method: 'PATCH',
                         body: JSON.stringify(data),
                         headers: {

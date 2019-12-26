@@ -30,13 +30,13 @@
 <style lang="scss" scoped>
   .answers {
     hr {
-      margin: 1rem 0;
       border: none;
       border-bottom: 1px solid $main-light;
     }
 
     &__count {
       margin-top: 2rem;
+      margin-bottom: 1rem;
     }
 
     &__answer {

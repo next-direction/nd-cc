@@ -45,7 +45,7 @@
 <style lang="scss" scoped>
   .answer {
     hr {
-      margin-top: 2rem;
+      margin-top: 0;
       margin-bottom: 1rem;
       border: none;
       border-bottom: 2px solid $main-light;
