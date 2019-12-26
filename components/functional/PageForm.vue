@@ -8,6 +8,9 @@
       <span class="content-label" v-if="!onlyEditor">Content<span class="form__field--required"> *</span></span>
       <div id="content-editor"></div>
     </div>
+    <div class="form__element" v-if="!onlyEditor">
+      <Tags @input="setTags" :value="tags"/>
+    </div>
     <div class="form__button">
       <button class="success">Save</button>
       <button type="button" class="gray" v-if="showCancel" @click="$emit('cancelForm')">Cancel</button>
@@ -16,10 +19,16 @@
 </template>
 
 <script>
+    import Tags from '~/components/functional/Tags.vue';
+
     export default {
+        components: {
+            Tags,
+        },
         data () {
             return {
                 title: this.defaultTitle,
+                tags: this.defaultTags,
             };
         },
         props: {
@@ -27,6 +36,10 @@
             defaultTitle: {
                 type: String,
                 default: '',
+            },
+            defaultTags: {
+                type: Array,
+                default: () => [],
             },
             defaultData: {
                 type: Object,
@@ -54,12 +67,29 @@
             },
         },
         methods: {
+            setTags (tags) {
+                this.tags = tags;
+            },
             async savePage () {
+
+                if (this.tags.length) {
+                    // all lower case
+                    this.tags = this.tags.map(tag => tag.toLowerCase());
+
+                    // search alphabetically
+                    this.tags.sort();
+
+                    // make sure comma around first and last value to allow search
+                    this.tags.unshift('');
+                    this.tags.push('');
+                }
+
                 const data = {
                     status: 'published',
                     title: this.title,
                     category: this.category,
                     content: await this.editor.save(),
+                    tags: this.tags,
                 };
 
                 if (!data.content.blocks.length) {

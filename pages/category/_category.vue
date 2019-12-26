@@ -30,7 +30,7 @@
         // fetch pages
         const pageResponse = await fetch(
             store.state.baseUrl
-            + `/items/page?filter[category][in]=${categories.join(',')}&sort=status,-created_on&fields=id,title,content,status,created_on,category.id,created_by.last_name,children.id,children.accepted,votes.*&filter[parent_page][eq]=0`,
+            + `/items/page?filter[category][in]=${categories.join(',')}&sort=status,-created_on&fields=id,title,content,status,tags,created_on,category.id,created_by.last_name,children.id,children.accepted,votes.*&filter[parent_page][eq]=0`,
             {
                 headers,
             },

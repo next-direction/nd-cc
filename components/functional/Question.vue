@@ -25,6 +25,9 @@
       </div>
       <div class="question__content-blocks">
         <Blocks :blocks="details.content.blocks"/>
+        <div class="page__tags" v-if="details.tags.length">
+          <Tags :tags="details.tags"/>
+        </div>
       </div>
     </div>
   </section>
@@ -32,11 +35,13 @@
 
 <script>
     import Blocks from '~/components/content/Blocks.vue';
+    import Tags from '~/components/content/Tags.vue';
     import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         components: {
             Blocks,
+            Tags,
         },
         computed: {
             currentVote () {
@@ -113,6 +118,10 @@
 
       &-blocks {
         flex: 1;
+
+        .page__tags {
+          margin: 0.6rem 0;
+        }
       }
     }
 

@@ -9,6 +9,9 @@
           <p class="page__excerpt">
             <Excerpt :blocks="page.content.blocks"/>
           </p>
+          <p class="page__tags" v-if="tags(page.tags).length">
+            <Tags :tags="page.tags"/>
+          </p>
           <p class="page__meta">
             Created by <strong>{{ page.created_by.last_name }}</strong> at <strong>{{ page.created_on | formatDate }}</strong> in <strong>{{
             getCategoryTree(page.category.id)}}</strong>
@@ -37,10 +40,12 @@
 
 <script>
     import Excerpt from '~/components/content/Excerpt.vue';
+    import Tags from '~/components/content/Tags.vue';
 
     export default {
         components: {
             Excerpt,
+            Tags,
         },
         methods: {
             getCategoryTree (categoryId) {
@@ -51,6 +56,9 @@
             },
             sumVotes (page) {
                 return page.votes.reduce((acc, current) => acc + current.vote, 0);
+            },
+            tags (tags) {
+                return tags.filter(tag => '' !== tag);
             },
         },
         props: ['pages'],
@@ -71,6 +79,10 @@
 
     .page__info {
       flex: 1;
+    }
+
+    .page__tags {
+      padding: 0.4rem;
     }
 
     .page__title {
