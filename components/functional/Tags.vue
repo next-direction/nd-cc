@@ -44,6 +44,7 @@
             },
             removeTag (tagToRemove) {
                 this.tags = this.tags.filter(tag => tag !== tagToRemove);
+                this.$emit('input', this.tags);
             },
         },
         props: ['value'],

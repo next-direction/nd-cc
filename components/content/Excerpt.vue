@@ -1,9 +1,9 @@
 <template>
-  <div class="excerpt__content">
+  <span class="excerpt__content">
     <span v-if="getFirstParagraph">
       {{ getFirstParagraph | ucfirst | excerpt }}
     </span>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -27,6 +27,8 @@
 
 <style lang="scss" scoped>
   .excerpt__content {
+    display: block;
+
     span {
       font-size: 0.9rem;
       line-height: 1.4rem;

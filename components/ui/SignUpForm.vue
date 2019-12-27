@@ -33,24 +33,35 @@
         </label>
       </div>
       <div class="form__button">
-        <button class="info">Sign up</button>
+        <button class="info" :disabled="loading" :class="{loading: loading}">
+          <span v-if="!loading">Sign up</span>
+          <Spinner v-if="loading" type="info"/>
+        </button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
+    import Spinner from '~/components/ui/Spinner.vue';
+
     export default {
+        components: {
+            Spinner,
+        },
         data () {
             return {
                 email: '',
                 password: '',
                 username: '',
+                loading: false,
             };
         },
         methods: {
             async register () {
                 try {
+                    this.loading = true;
+
                     const response = await fetch(this.$store.state.baseUrl + '/users', {
                         method: 'POST',
                         headers: {
@@ -65,17 +76,28 @@
                     });
                     const result = await response.json();
 
+                    this.loading = false;
+
                     if (result.error) {
-                        alert(result.error.message);
+                        this.$alert('The following error occurred: ' + result.error.message, null, 'error');
+                        return;
                     }
 
-                    alert('Sign up successful! An Administrator has been informed and will activate you account as soon as possible.');
+                    this.$alert(
+                        'Sign up successful! An Administrator has been informed and will activate your account as soon as possible. Maybe we will send you an email which you have to answer.',
+                        'Congratulations',
+                        'success',
+                        {
+                            allowOutsideClick: false,
+                        },
+                    );
 
                     this.email = '';
                     this.password = '';
+
                     this.closeSignUpForm();
                 } catch (e) {
-                    alert(e.message);
+                    this.$alert('The following error occurred: ' + e.message, null, 'error');
                 }
             },
             closeSignUpForm (e) {
@@ -127,6 +149,15 @@
     opacity: 0;
     transition: all 0.2s ease;
     color: white;
+
+    button.info {
+      width: 100px;
+      height: 36px;
+
+      &.loading {
+        font-size: 1.3rem;
+      }
+    }
 
     h1 {
       color: white;

@@ -111,13 +111,13 @@
             vote (vote) {
                 if (this.user) {
 
-                    if (this.user.id !== this.details.created_by.id) {
+                    if (+this.user.id !== +this.details.created_by.id) {
                         this.$store.dispatch('page/addVote', { vm: this, vote, page: this.details.id, isQuestion: false });
                     } else {
-                        alert('You cannot vote for your own answer!');
+                        this.$alert('You cannot vote for your own answer!', null, 'warning');
                     }
                 } else {
-                    alert('Please login to vote!');
+                    this.$alert('Please login to vote!', null, 'warning');
                 }
             },
         },

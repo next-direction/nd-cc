@@ -151,7 +151,7 @@ export const actions = {
 
           return newChild;
         } catch (e) {
-          alert(e.message);
+          await app.$alert('The following error occurred: ' + e.message, null, 'error');
         }
 
       }
@@ -162,7 +162,7 @@ export const actions = {
     Promise.all(promises).then(children => {
       commit('setChildren', children);
       this.acceptRequestRunning = false;
-    }).catch(e => alert(e.message));
+    }).catch(e => app.$alert('The following error occurred: ' + e.message, null, 'error'));
   },
 
   async addVote ({ commit, getters, rootState, state }, { vm: app, vote, page, isQuestion }) {
@@ -186,10 +186,10 @@ export const actions = {
         if (newVote && newVote.id) {
           commit('addVote', newVote);
         } else {
-          alert('Error during save!');
+          await app.$alert('Error during save!', null, 'error');
         }
       } catch (e) {
-        alert(e.message);
+        await app.$alert('The following error occurred: ' + e.message, null, 'error');
       }
     } else { // edit existing vote
       const existingVote = getters.getVote(rootState.user, isQuestion ? 0 : page);
@@ -206,7 +206,7 @@ export const actions = {
 
           commit('deleteVote', existingVote);
         } catch (e) {
-          alert(e.message);
+          await app.$alert('The follwing error occurred: ' + e.message, null, 'error');
         }
       } else { // change vote
         const data = {
@@ -226,7 +226,7 @@ export const actions = {
 
           commit('updateVote', editedVote);
         } catch (e) {
-          alert(e.message);
+          await app.$alert('The follwing error occurred: ' + e.message, null, 'error');
         }
       }
     }

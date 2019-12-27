@@ -12,7 +12,7 @@
       <Tags @input="setTags" :value="tags"/>
     </div>
     <div class="form__button">
-      <button class="success">Save</button>
+      <button class="success" :disabled="loading">Save</button>
       <button type="button" class="gray" v-if="showCancel" @click="$emit('cancelForm')">Cancel</button>
     </div>
   </form>
@@ -23,7 +23,7 @@
 
     const sanitizeTags = tags => {
         if (tags.length) {
-            tags = tags.map(tag => tag.toLowerCase().replace(' ', '-'));
+            tags = tags.map(tag => tag.toLowerCase().replace(/ /g, '-'));
 
             // search alphabetically
             tags.sort();
@@ -44,6 +44,7 @@
             return {
                 title: this.defaultTitle,
                 tags: this.defaultTags.filter(tag => tag !== ''),
+                loading: false,
             };
         },
         props: {
@@ -95,7 +96,7 @@
                 };
 
                 if (!data.content.blocks.length) {
-                    alert('Please enter some content!');
+                    this.$alert('Please enter some content!', null, 'warning');
                     return;
                 }
 
@@ -104,6 +105,8 @@
                 }
 
                 try {
+                    this.loading = true;
+
                     const res = await fetch(this.$store.state.baseUrl + '/items/page?fields=*,created_by.last_name,created_by.id', {
                         method: 'POST',
                         body: JSON.stringify(data),
@@ -113,6 +116,8 @@
                         },
                     });
                     const { data: newPage } = await res.json();
+
+                    this.loading = false;
 
                     if (newPage && newPage.id) {
                         if (newPage.parent_page) {
@@ -127,10 +132,10 @@
                         }
 
                     } else {
-                        alert('Error during save!');
+                        this.$alert('Error during save, please try again later!', null, 'error');
                     }
                 } catch (e) {
-                    alert(e.message);
+                    this.$alert('The following error occurred: ' + e.message, null, 'error');
                 }
             },
             async updatePage () {
@@ -142,10 +147,13 @@
                 };
 
                 if (!data.content.blocks.length) {
-                    alert('Please enter some content!');
+                    this.$alert('Please enter some content!', null, 'warning');
+                    return;
                 }
 
                 try {
+                    this.loading = true;
+
                     const res = await fetch(`${this.$store.state.baseUrl}/items/page/${this.pageId}?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,votes.*,tags`, {
                         method: 'PATCH',
                         body: JSON.stringify(data),
@@ -156,10 +164,12 @@
                     });
                     const { data: editedPage } = await res.json();
 
+                    this.loading = false;
+
                     this.$emit('pageSaved', editedPage);
                     this.$emit('updateSaved', true);
                 } catch (e) {
-                    alert(e.message);
+                    this.$alert('The following error occurred: ' + e.message, null, 'error');
                 }
             },
             initEditor () {

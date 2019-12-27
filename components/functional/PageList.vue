@@ -105,13 +105,17 @@
     }
 
     .page__votes {
+      align-self: flex-start;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       font-size: 0.8rem;
-      padding: 0 0.8rem;
-      border-radius: 0 $border-radius $border-radius 0;
+      padding: 0.8rem;
+      border-radius: $border-radius;
+      border: 1px solid $gray-dark;
+      margin: 0.6rem;
+      margin-right: 0.3rem;
 
       &-count {
         font-size: 1.4rem;
@@ -119,21 +123,27 @@
     }
 
     .page__answers {
+      align-self: flex-start;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       font-size: 0.8rem;
-      padding: 0 0.6rem;
-      border-radius: 0 $border-radius $border-radius 0;
+      padding: 0.8rem 0.4rem;
+      border-radius: $border-radius;
+      border: 1px solid $gray-dark;
+      margin: 0.6rem;
+      margin-left: 0.3rem;
 
       &.hasAnswers {
         color: $success-dark;
+        border-color: $success-dark;
       }
 
       &.hasAcceptedAnswer {
         background: $success-light;
         color: $success-dark;
+
       }
 
       &-count {

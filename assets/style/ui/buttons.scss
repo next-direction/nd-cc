@@ -46,8 +46,8 @@ button {
       background: lighten($main-color, 50%);
     }
 
-    &:hover,
-    &:active {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
       color: white;
       background: $main-color;
     }
@@ -61,8 +61,8 @@ button {
       background: lighten($success-dark, 50%);
     }
 
-    &:hover,
-    &:active {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
       color: white;
       background: $success-dark;
     }
@@ -76,8 +76,8 @@ button {
       background: lighten($info-dark, 50%);
     }
 
-    &:hover,
-    &:active {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
       color: white;
       background: $info-dark;
     }
@@ -91,8 +91,8 @@ button {
       background: lighten($danger-dark, 50%);
     }
 
-    &:hover,
-    &:active {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
       color: white;
       background: $danger-dark;
     }
@@ -106,8 +106,8 @@ button {
       background: lighten($warning-dark, 50%);
     }
 
-    &:hover,
-    &:active {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
       color: white;
       background: $warning-dark;
     }
@@ -121,8 +121,8 @@ button {
       background: lighten($gray-dark, 50%);
     }
 
-    &:hover,
-    &:active {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
       color: white;
       background: $gray-dark;
     }

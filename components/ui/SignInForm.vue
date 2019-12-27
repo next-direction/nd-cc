@@ -12,7 +12,7 @@
         <label for="password">Password</label>
       </div>
       <div class="form__button">
-        <button class="success">Sign in</button>
+        <button class="success" :disabled="loading">Sign in</button>
       </div>
     </form>
   </div>
@@ -24,11 +24,14 @@
             return {
                 email: '',
                 password: '',
+                loading: false,
             };
         },
         methods: {
             async signInAction () {
                 try {
+                    this.loading = true;
+
                     const response = await fetch(this.$store.state.baseUrl + '/auth/authenticate', {
                         method: 'POST',
                         headers: {
@@ -41,8 +44,11 @@
                     });
                     const result = await response.json();
 
+                    this.loading = false;
+
                     if (result.error) {
-                        alert(result.error.message);
+                        this.$alert('The following error occurred: ' + result.error.message, null, 'error');
+                        return;
                     }
 
                     if (result.data.token) {
@@ -62,16 +68,16 @@
                             this.$store.dispatch('fetchAvatar', { ...user, token: result.data.token });
                         }
                     } else {
-                        alert('Error during sign in, please try again later');
+                        this.$alert('Error during sign in, please try again later', null, 'error');
+                        return;
                     }
 
                     this.email = '';
                     this.password = '';
 
                     this.closeSignInForm();
-
                 } catch (e) {
-                    alert(e.message);
+                    this.$alert('The following error occurred: ' + e.message, null, 'error');
                 }
             },
             closeSignInForm (e) {
