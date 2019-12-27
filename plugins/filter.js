@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import stripTags from 'striptags';
 
 Vue.filter('ucfirst', word => word.charAt(0).toUpperCase() + word.substring(1));
 
@@ -16,7 +17,7 @@ Vue.filter('formatDate', dateString => {
 
 Vue.filter('excerpt', text => {
   if (text.length > 200) {
-    text = text.substring(0, 200).trim() + '...';
+    text = stripTags(text).substring(0, 200).trim() + '...';
   }
 
   return text;

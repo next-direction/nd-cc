@@ -21,6 +21,21 @@
 <script>
     import Tags from '~/components/functional/Tags.vue';
 
+    const sanitizeTags = tags => {
+        if (tags.length) {
+            tags = tags.map(tag => tag.toLowerCase().replace(' ', '-'));
+
+            // search alphabetically
+            tags.sort();
+
+            // make sure comma around first and last value to allow search
+            tags.unshift('');
+            tags.push('');
+        }
+
+        return tags;
+    };
+
     export default {
         components: {
             Tags,
@@ -28,7 +43,7 @@
         data () {
             return {
                 title: this.defaultTitle,
-                tags: this.defaultTags,
+                tags: this.defaultTags.filter(tag => tag !== ''),
             };
         },
         props: {
@@ -71,25 +86,12 @@
                 this.tags = tags;
             },
             async savePage () {
-
-                if (this.tags.length) {
-                    // all lower case
-                    this.tags = this.tags.map(tag => tag.toLowerCase());
-
-                    // search alphabetically
-                    this.tags.sort();
-
-                    // make sure comma around first and last value to allow search
-                    this.tags.unshift('');
-                    this.tags.push('');
-                }
-
                 const data = {
                     status: 'published',
                     title: this.title,
                     category: this.category,
                     content: await this.editor.save(),
-                    tags: this.tags,
+                    tags: sanitizeTags(this.tags),
                 };
 
                 if (!data.content.blocks.length) {
@@ -136,6 +138,7 @@
                     title: this.title,
                     content: await this.editor.save(),
                     category: this.category,
+                    tags: sanitizeTags(this.tags),
                 };
 
                 if (!data.content.blocks.length) {
@@ -143,7 +146,7 @@
                 }
 
                 try {
-                    const res = await fetch(`${this.$store.state.baseUrl}/items/page/${this.pageId}?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,votes.*`, {
+                    const res = await fetch(`${this.$store.state.baseUrl}/items/page/${this.pageId}?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,votes.*,tags`, {
                         method: 'PATCH',
                         body: JSON.stringify(data),
                         headers: {
