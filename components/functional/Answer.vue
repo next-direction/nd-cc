@@ -59,7 +59,7 @@
                 return this.$store.getters['page/hasAcceptedAnswer'];
             },
             canAccept () {
-                return !this.details.accepted && !this.accepted && this.user && +this.details.created_by.id === +this.user.id;
+                return !this.details.accepted && !this.accepted && this.user && +this.parent.created_by.id === +this.user.id;
             },
             currentVote () {
                 return this.$store.state.user ? this.$store.getters['page/hasVote'](this.$store.state.user, this.details.id) : 0;
@@ -73,6 +73,9 @@
                     faChevronUp,
                     faChevronDown,
                 };
+            },
+            parent () {
+                return this.$store.state.page.details;
             },
             user () {
                 return this.$store.state.user;
@@ -94,7 +97,12 @@
             toggleAccept (answer) {
 
                 if (this.user) {
-                    this.$store.dispatch('page/toggleAcceptAnswer', { vm: this, answer });
+
+                    if (+this.user.id === +this.parent.created_by.id) {
+                        this.$store.dispatch('page/toggleAcceptAnswer', { vm: this, answer });
+                    } else {
+                        this.$alert('Only creator of the question can accept an answer!', null, 'warning');
+                    }
                 }
             },
             updateEditSaved (saved) {

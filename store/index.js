@@ -7,7 +7,6 @@ export const state = () => ({
   userStateChange: false,
   baseUrl: '',
   user: null,
-  avatar: '',
   forwardTarget: '',
   categories: {
     all: [],
@@ -30,6 +29,43 @@ export const getters = {
     });
 
     return children;
+  },
+  getSmallAvatar: state => {
+    const avatarData = state.user && state.user.avatar ? state.user.avatar.data : null;
+
+    // append time to make sure it refreshes even if file name stays the same
+    if (avatarData && avatarData.thumbnails[0]) {
+      return avatarData.thumbnails[0].url + '&t=' + Date.now();
+    } else if (avatarData) {
+      return avatarData.full_url + '?t=' + Date.now();
+    }
+
+    return '';
+  },
+  getFullAvatar: state => {
+    const avatarData = state.user && state.user.avatar ? state.user.avatar.data : null;
+
+    // append time to make sure it refreshes even if file name stays the same
+    if (avatarData) {
+      return avatarData.full_url + '?t=' + Date.now();
+    }
+
+    return '';
+  },
+  getCategoryOptions: (state, getters) => (parentId = 0, level = 0) => {
+    const options = [];
+
+    state.categories.all.filter(category => category.parent_category === parentId).forEach(category => {
+      options.push({
+        value: category.id,
+        text: category.name,
+        level,
+        allowed: category.pages_allowed,
+        children: getters.getCategoryOptions(category.id, level + 1),
+      });
+    });
+
+    return options;
   },
   getCategoryTree: state => categoryId => {
     let category = state.categories.all.find(category => category.id === categoryId);
@@ -66,21 +102,6 @@ export const getters = {
 
     return breadcrumb;
   },
-  getCategoryOptions: (state, getters) => (parentId = 0, level = 0) => {
-    const options = [];
-
-    state.categories.all.filter(category => category.parent_category === parentId).forEach(category => {
-      options.push({
-        value: category.id,
-        text: category.name,
-        level,
-        allowed: category.pages_allowed,
-        children: getters.getCategoryOptions(category.id, level + 1),
-      });
-    });
-
-    return options;
-  },
 };
 
 export const mutations = {
@@ -99,9 +120,6 @@ export const mutations = {
   setUser (state, user) {
     state.user = user;
   },
-  setAvatar (state, url) {
-    state.avatar = url;
-  },
   setCategories (state, categories) {
     state.categories.all = categories;
 
@@ -118,6 +136,12 @@ export const mutations = {
   },
   setForwardTarget (state, target) {
     state.forwardTarget = target;
+  },
+  setAvatar (state, avatar) {
+    state.user = {
+      ...state.user,
+      avatar,
+    };
   },
 };
 
@@ -141,9 +165,7 @@ export const actions = {
 
     // load user data
     if (isTokenValid(token)) {
-      const tokenData = jwtDecode(token);
-
-      const res = await fetch(env.baseUrl + '/users/' + tokenData.id, {
+      const res = await fetch(env.baseUrl + '/users/me?fields=*,role.*,avatar.*', {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token,
@@ -153,41 +175,10 @@ export const actions = {
 
       if (data) {
         commit('setUser', data);
-
-        if (data.avatar) {
-          await dispatch('fetchAvatar', { ...data, token });
-        }
       }
     } else {
       app.$cookies.remove('token');
     }
-  },
-  async fetchAvatar ({ commit, state }, user) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const fileRes = await fetch(state.baseUrl + '/files/' + user.avatar, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + user.token,
-          },
-        });
-
-        var { data: response } = await fileRes.json();
-      } catch (e) {
-        reject(e.message);
-      }
-
-      let avatar = '';
-
-      if (response && response.data && response.data.thumbnails[0]) {
-        avatar = response.data.thumbnails[0].url;
-      } else if (response && response.data) {
-        avatar = response.data.full_url;
-      }
-
-      commit('setAvatar', avatar);
-      resolve(avatar);
-    });
   },
   userStateChanged ({ commit }) {
     commit('toggleUserStateChange');

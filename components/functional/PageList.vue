@@ -9,9 +9,9 @@
           <p class="page__excerpt">
             <Excerpt :blocks="page.content.blocks"/>
           </p>
-          <p class="page__tags" v-if="tags(page.tags).length">
+          <div class="page__tags" v-if="tags(page.tags).length">
             <Tags :tags="page.tags"/>
-          </p>
+          </div>
           <p class="page__meta">
             Created by <strong>{{ page.created_by.last_name }}</strong> at <strong>{{ page.created_on | formatDate }}</strong> in <strong>{{
             getCategoryTree(page.category.id)}}</strong>

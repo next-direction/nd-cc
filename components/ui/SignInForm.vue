@@ -58,15 +58,18 @@
                             path: '/',
                         });
 
-                        const user = result.data.user;
+                        const userRes = await fetch(this.$store.state.baseUrl + '/users/me?fields=*,role.*,avatar.*', {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + result.data.token,
+                            },
+                        });
 
-                        this.$store.commit('setUser', user);
+                        const { data: userData } = await userRes.json();
+
+                        this.$store.commit('setUser', userData);
                         this.$registerRefreshHandler(result.data.token);
                         this.$store.dispatch('userStateChanged');
-
-                        if (user.avatar) {
-                            this.$store.dispatch('fetchAvatar', { ...user, token: result.data.token });
-                        }
                     } else {
                         this.$alert('Error during sign in, please try again later', null, 'error');
                         return;
