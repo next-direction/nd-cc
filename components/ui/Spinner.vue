@@ -35,6 +35,10 @@
     border-color: $main-color transparent $main-color transparent;
   }
 
+  .lds-dual-ring.success:after {
+    border-color: $success-dark transparent $success-dark transparent;
+  }
+
   @keyframes lds-dual-ring {
     0% {
       transform: rotate(0deg);

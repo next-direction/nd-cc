@@ -9,6 +9,11 @@
         <p>{{ user.last_name }}</p>
         <p><strong>Email address</strong></p>
         <p>{{ user.email }}</p>
+        <template v-if="!pwChange">
+          <p><strong>Password</strong></p>
+          <button class="warning small" @click="pwChange = true">Change password</button>
+        </template>
+        <ChangePassword v-if="pwChange" @cancel="pwChange = false"/>
       </div>
     </div>
     <div class="profile__latest-questions">
@@ -52,12 +57,14 @@
 
 <script>
     import Avatar from '~/components/functional/Profile/Avatar';
+    import ChangePassword from '~/components/functional/Profile/ChangePassword.vue';
     import PageList from '~/components/functional/PageList';
     import Spinner from '~/components/ui/Spinner.vue';
 
     export default {
         components: {
             Avatar,
+            ChangePassword,
             PageList,
             Spinner,
         },
@@ -85,6 +92,7 @@
                 questions: [],
                 answers: [],
                 accepted: [],
+                pwChange: false,
             };
         },
         middleware: 'guard',
@@ -111,7 +119,6 @@
 
             fetch(
                 this.$store.state.baseUrl
-                //+ '/items/page?sort=-created_on&fields=id,title,content,status,tags,created_on,category.id,created_by.last_name,children.id,children.accepted,votes.*'
                 + '/items/page?sort=-created_on&fields=parent_page.*,parent_page.category.id,parent_page.created_by.id,parent_page.created_by.last_name,parent_page.children.id,parent_page.children.accepted,parent_page.votes.*'
                 + `&filter[created_by][eq]=${this.user.id}&filter[parent_page][neq]=0&filter[status][eq]=published&filter[accepted][eq]=1`
                 + '&limit=5',
