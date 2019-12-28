@@ -1,24 +1,38 @@
 <template>
   <div>
-    <input placeholder="Search in questions"/>
-    <button>
+    <input placeholder="Search in questions" v-model="term" @keypress.enter.prevent="searchTerm"/>
+    <button @click="searchTerm">
       <fa :icon="fa.faSearch"></fa>
     </button>
   </div>
 </template>
 
 <script>
-    import { faSearch } from "@fortawesome/free-solid-svg-icons";
+    import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         computed: {
-            fa() {
+            fa () {
                 return {
-                    faSearch
+                    faSearch,
                 };
-            }
-        }
-    }
+            },
+        },
+        data () {
+            return {
+                term: '',
+            };
+        },
+        methods: {
+            searchTerm () {
+                if (this.term.trim()) {
+                    const term = this.term.trim();
+                    this.term = '';
+                    this.$router.push('/search/term/' + term);
+                }
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

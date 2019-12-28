@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="tag" v-for="tag in filteredTags">{{ tag }}</span>
+    <nuxt-link :to="'/search/tag/' + tag" tag="span" class="tag" v-for="tag in filteredTags" :key="tag.id">{{ tag }}</nuxt-link>
   </div>
 </template>
 
@@ -24,5 +24,6 @@
     padding: 0.3rem;
     display: inline-block;
     margin-right: 0.2rem;
+    cursor: pointer;
   }
 </style>

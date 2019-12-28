@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import Search from '~/components/functional/Search.vue';
+    import Search from '~/components/ui/Search.vue';
     import SignUp from '~/components/functional/SignUp.vue';
     import SignIn from '~/components/functional/SignIn.vue';
     import UserMenu from '~/components/functional/UserMenu.vue';

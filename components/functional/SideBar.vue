@@ -4,6 +4,9 @@
       <li>
         <nuxt-link to="/">Newest topics</nuxt-link>
       </li>
+      <li v-if="$route.path.includes('/search/')">
+        <span class="active-search nuxt-link-exact-active">Search</span>
+      </li>
     </ul>
     <div class="divider">
       Categories
@@ -47,12 +50,13 @@
 
       li {
 
-        a {
+        a, .active-search {
           width: 100%;
           display: inline-block;
           padding: 0.4rem 2rem 0.4rem 0.4rem;
           text-decoration: none;
           border-right: 4px solid transparent;
+          color: $main-color;
 
           &.nuxt-link-exact-active {
             border-right: 4px solid $main-color;
