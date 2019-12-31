@@ -7,29 +7,42 @@
         <input id="signup-email" placeholder="Email address" v-model="email"/>
         <label for="signup-email">Email address</label>
       </div>
+      <div class="field-description" :class="{invalid: $v.email.$error}">
+        * only for login and communication
+      </div>
       <div class="form__field white">
         <input id="username" placeholder="Username" v-model="username"/>
         <label for="username">Username</label>
+      </div>
+      <div class="field-description" :class="{invalid: $v.username.$error}">
+        * display name (4 - 50 chars)
       </div>
       <div class="form__field white">
         <input id="signup-password" type="password" placeholder="Password" v-model="password"/>
         <label for="signup-password">Password</label>
       </div>
+      <div class="field-description" :class="{invalid: $v.password.$error}">
+        * min 8 chars, lower and upper case letter, special character
+        <fa :icon="fa.faInfoCircle" title="Accepted: !@#$%^&*()_+}{;'?>.<,"></fa>
+      </div>
       <div class="form__field white">
-        <input id="signup-confirm-password" type="password" placeholder="Confirm password"/>
+        <input id="signup-confirm-password" v-model="confirmPassword" type="password" placeholder="Confirm password"/>
         <label for="signup-confirm-password">Confirm password</label>
       </div>
+      <div class="field-description" :class="{invalid: $v.confirmPassword.$error}">
+        * must match password
+      </div>
       <hr style="border: none;">
-      <div class="form__checkbox classic" white>
-        <input id="terms" type="checkbox">
+      <div class="form__checkbox classic" white :class="{invalid: $v.terms.$error}">
+        <input id="terms" type="checkbox" v-model="terms">
         <label for="terms">I accept the
-          <nuxt-link to="/legal/terms" @click.native="closeSignUpForm">terms of use</nuxt-link>
+          <a href="/legal/terms" target="_blank">terms of use</a>
         </label>
       </div>
-      <div class="form__checkbox classic" white>
-        <input id="privacy" type="checkbox">
+      <div class="form__checkbox classic" white :class="{invalid: $v.privacy.$error}">
+        <input id="privacy" type="checkbox" v-model="privacy">
         <label for="privacy">I accept the
-          <nuxt-link to="/legal/privacy" @click.native="closeSignUpForm">privacy agreement</nuxt-link>
+          <a href="/legal/privacy" target="_blank">privacy agreement</a>
         </label>
       </div>
       <div class="form__button">
@@ -44,21 +57,42 @@
 
 <script>
     import Spinner from '~/components/ui/Spinner.vue';
+    import { email, maxLength, minLength, required, sameAs } from 'vuelidate/lib/validators';
+    import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         components: {
             Spinner,
         },
+        computed: {
+            fa () {
+                return {
+                    faInfoCircle,
+                };
+            },
+            signUp () {
+                return this.$store.state.signUp;
+            },
+        },
         data () {
             return {
+                confirmPassword: '',
                 email: '',
                 password: '',
                 username: '',
+                terms: false,
+                privacy: false,
                 loading: false,
             };
         },
         methods: {
             async register () {
+                this.$v.$touch();
+
+                if (this.$v.$invalid) {
+                    return;
+                }
+
                 try {
                     this.loading = true;
 
@@ -79,7 +113,13 @@
                     this.loading = false;
 
                     if (result.error) {
-                        this.$alert('The following error occurred: ' + result.error.message, null, 'error');
+                        if (result.error.code === 204) {
+                            this.$alert('Email address or username already taken. Please try different values.', null, 'info');
+                        } else {
+                            console.log(result.error.message);
+                            this.$alert('Error during registration, try again later or contact us if the error persists', null, 'error');
+                        }
+
                         return;
                     }
 
@@ -100,16 +140,49 @@
                     this.$alert('The following error occurred: ' + e.message, null, 'error');
                 }
             },
-            closeSignUpForm (e) {
-                if (!e || !e.ctrlKey) {
-                    this.$store.commit('showBackdrop', false);
-                    this.$store.commit('showSignUp', false);
-                }
+            closeSignUpForm () {
+                this.email = '';
+                this.password = '';
+                this.confirmPassword = '';
+                this.username = '';
+                this.terms = false;
+                this.privacy = false;
+                this.$v.$reset();
+
+                this.loading = false;
+
+                this.$store.commit('showBackdrop', false);
+                this.$store.commit('showSignUp', false);
             },
         },
-        computed: {
-            signUp () {
-                return this.$store.state.signUp;
+        validations: {
+            confirmPassword: {
+                required,
+                sameAsPassword: sameAs('password'),
+            },
+            email: {
+                email,
+                maxLength: maxLength(128),
+                required,
+            },
+            password: {
+                minLength: minLength(8),
+                strongPassword (password) {
+
+                    // Directus rules for strong passwords
+                    return /(?=^.{8,}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{';'?>.<,])(?!.*\s).*$/.test(password);
+                },
+            },
+            privacy: {
+                sameAs: sameAs(() => true),
+            },
+            terms: {
+                sameAs: sameAs(() => true),
+            },
+            username: {
+                maxLength: maxLength(50),
+                minLength: minLength(4),
+                required,
             },
         },
     };
@@ -150,6 +223,10 @@
     transition: all 0.2s ease;
     color: white;
 
+    hr {
+      margin: 1rem 0;
+    }
+
     button.info {
       width: 100px;
       height: 36px;
@@ -178,6 +255,21 @@
 
     .form__checkbox {
       font-size: 0.8rem;
+
+      &.invalid,
+      &.invalid a {
+        color: red;
+        font-weight: bold;
+      }
+    }
+
+    .field-description {
+      font-size: 0.6rem;
+
+      &.invalid {
+        font-weight: bold;
+        color: red;
+      }
     }
   }
 </style>

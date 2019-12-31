@@ -7,9 +7,15 @@
         <input id="email-address" placeholder="Email address" v-model="email"/>
         <label for="email-address">Email address</label>
       </div>
+      <div class="field-description" v-if="$v.email.$error">
+        * enter a valid email address
+      </div>
       <div class="form__field white">
         <input id="password" type="password" placeholder="Password" v-model="password"/>
         <label for="password">Password</label>
+      </div>
+      <div class="field-description" v-if="$v.password.$error">
+        * enter a valid password
       </div>
       <div class="form__button">
         <button class="success" :disabled="loading">Sign in</button>
@@ -19,7 +25,14 @@
 </template>
 
 <script>
+    import { email, maxLength, minLength, required, sameAs } from 'vuelidate/lib/validators';
+
     export default {
+        computed: {
+            signIn () {
+                return this.$store.state.signIn;
+            },
+        },
         data () {
             return {
                 email: '',
@@ -29,6 +42,12 @@
         },
         methods: {
             async signInAction () {
+                this.$v.$touch();
+
+                if (this.$v.$invalid) {
+                    return;
+                }
+
                 try {
                     this.loading = true;
 
@@ -47,7 +66,13 @@
                     this.loading = false;
 
                     if (result.error) {
-                        this.$alert('The following error occurred: ' + result.error.message, null, 'error');
+                        if (result.error.code === 100) {
+                            this.$alert('Invalid email address or password', null, 'warning');
+                        } else {
+                            console.log(result.error.message);
+                            this.$alert('Error during login, try again later or contact us if the error persists', null, 'error');
+                        }
+
                         return;
                     }
 
@@ -80,19 +105,34 @@
 
                     this.closeSignInForm();
                 } catch (e) {
+                    this.loading = false;
+
                     this.$alert('The following error occurred: ' + e.message, null, 'error');
                 }
             },
-            closeSignInForm (e) {
-                if (!e || !e.ctrlKey) {
-                    this.$store.commit('showBackdrop', false);
-                    this.$store.commit('showSignIn', false);
-                }
+            closeSignInForm () {
+                this.email = '';
+                this.password = '';
+
+                this.loading = false;
+
+                this.$store.commit('showBackdrop', false);
+                this.$store.commit('showSignIn', false);
             },
         },
-        computed: {
-            signIn () {
-                return this.$store.state.signIn;
+        validations: {
+            email: {
+                email,
+                maxLength: maxLength(128),
+                required,
+            },
+            password: {
+                minLength: minLength(8),
+                strongPassword (password) {
+
+                    // Directus rules for strong passwords
+                    return /(?=^.{8,}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{';'?>.<,])(?!.*\s).*$/.test(password);
+                },
             },
         },
     };
@@ -152,6 +192,12 @@
 
     .form__checkbox {
       font-size: 0.8rem;
+    }
+
+    .field-description {
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: red;
     }
   }
 </style>

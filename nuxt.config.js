@@ -36,6 +36,7 @@ export default {
     '~plugins/filter.js',
     { src: '~plugins/alert.js', mode: 'client' },
     { src: '~plugins/refreshToken.js', mode: 'client' },
+    '~plugins/vuelidate.js',
   ],
   /*
   ** Nuxt.js dev-modules
