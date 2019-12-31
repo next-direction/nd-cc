@@ -61,7 +61,12 @@
                 return tags.filter(tag => '' !== tag);
             },
         },
-        props: ['pages'],
+        props: {
+            pages: {
+                type: Array,
+                default: () => [],
+            },
+        },
     };
 </script>
 

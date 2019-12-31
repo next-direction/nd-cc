@@ -18,7 +18,7 @@
                 const categories = this.$store.state.categories.all;
                 const parentMapping = this.$store.state.categories.parents;
 
-                return categories.filter(category => parentMapping[category.id] === this.parentCategory);
+                return categories.filter(category => +parentMapping[category.id] === +this.parentCategory);
             },
         },
     };
