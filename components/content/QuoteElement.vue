@@ -15,7 +15,7 @@
     border-style: solid;
     border-color: $main-light;
     padding: 1.5em 0 0.5em;
-    margin: 1.5em 0;
+    margin: 1.5em 0 !important;
     position: relative;
     color: $secondary-color;
 

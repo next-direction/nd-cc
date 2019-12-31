@@ -1,30 +1,35 @@
 class CodePlugin {
-  static enableLineBreaks = true;
-  static modes = [
-    ['ace/mode/c_cpp', 'C/C++'],
-    ['ace/mode/csharp', 'C#'],
-    ['ace/mode/css', 'CSS'],
-    ['ace/mode/diff', 'Diff'],
-    ['ace/mode/dockerfile', 'Docker'],
-    ['ace/mode/gitignore', 'Gitignore'],
-    ['ace/mode/golang', 'Go'],
-    ['ace/mode/html', 'HTML'],
-    ['ace/mode/java', 'Java'],
-    ['ace/mode/javascript', 'JavaScript'],
-    ['ace/mode/json', 'JSON'],
-    ['ace/mode/markdown', 'Markdown'],
-    ['ace/mode/perl', 'Perl'],
-    ['ace/mode/php', 'PHP'],
-    ['ace/mode/python', 'Python'],
-    ['ace/mode/smarty', 'Smarty'],
-    ['ace/mode/swift', 'Swift'],
-    ['ace/mode/sql', 'SQL'],
-    ['ace/mode/text', 'Text'],
-    ['ace/mode/twig', 'Twig'],
-    ['ace/mode/typescript', 'TypeScript'],
-    ['ace/mode/xml', 'XML'],
-    ['ace/mode/yaml', 'Yaml'],
-  ];
+  static get enableLineBreaks () {
+    return true;
+  }
+
+  static get modes () {
+    return [
+      ['ace/mode/c_cpp', 'C/C++'],
+      ['ace/mode/csharp', 'C#'],
+      ['ace/mode/css', 'CSS'],
+      ['ace/mode/diff', 'Diff'],
+      ['ace/mode/dockerfile', 'Docker'],
+      ['ace/mode/gitignore', 'Gitignore'],
+      ['ace/mode/golang', 'Go'],
+      ['ace/mode/html', 'HTML'],
+      ['ace/mode/java', 'Java'],
+      ['ace/mode/javascript', 'JavaScript'],
+      ['ace/mode/json', 'JSON'],
+      ['ace/mode/markdown', 'Markdown'],
+      ['ace/mode/perl', 'Perl'],
+      ['ace/mode/php', 'PHP'],
+      ['ace/mode/python', 'Python'],
+      ['ace/mode/smarty', 'Smarty'],
+      ['ace/mode/swift', 'Swift'],
+      ['ace/mode/sql', 'SQL'],
+      ['ace/mode/text', 'Text'],
+      ['ace/mode/twig', 'Twig'],
+      ['ace/mode/typescript', 'TypeScript'],
+      ['ace/mode/xml', 'XML'],
+      ['ace/mode/yaml', 'Yaml'],
+    ];
+  }
 
   constructor ({ data }) {
     this.data = data;
