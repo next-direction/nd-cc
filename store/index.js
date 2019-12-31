@@ -55,7 +55,7 @@ export const getters = {
   getCategoryOptions: (state, getters) => (parentId = 0, level = 0) => {
     const options = [];
 
-    state.categories.all.filter(category => category.parent_category === parentId).forEach(category => {
+    state.categories.all.filter(category => +category.parent_category === +parentId).forEach(category => {
       options.push({
         value: category.id,
         text: category.name,
@@ -68,7 +68,7 @@ export const getters = {
     return options;
   },
   getCategoryTree: state => categoryId => {
-    let category = state.categories.all.find(category => category.id === categoryId);
+    let category = state.categories.all.find(category => +category.id === +categoryId);
 
     const categories = [{
       id: category.id,
@@ -77,7 +77,7 @@ export const getters = {
     while (category && category.parent_category) {
       const parent = category.parent_category;
 
-      category = state.categories.all.find(category => category.id === parent);
+      category = state.categories.all.find(category => +category.id === +parent);
 
       if (category) {
         categories.unshift({
