@@ -190,10 +190,16 @@
                             class: ImageTool,
                             config: {
                                 uploader: {
-                                    uploadByFile (file) {
+                                    uploadByFile: file => {
+
+                                        if (file.size / 1024 > 100) {
+                                            this.$alert('File too big! Only 100kB are allowed', null, 'warning');
+                                            return Promise.reject('File too big');
+                                        }
+
                                         const reader = new FileReader();
 
-                                        const promise = new Promise((resolve, reject) => {
+                                        return new Promise((resolve, reject) => {
                                             reader.onloadend = function () {
 
                                                 if (reader.error) {
@@ -210,29 +216,34 @@
 
                                             reader.readAsDataURL(file);
                                         });
-
-                                        return promise;
                                     },
-                                    uploadByUrl (url) {
+                                    uploadByUrl: url => {
                                         return fetch(url, {
                                             mode: 'cors',
                                         })
                                             .then(response => {
                                                 return response.blob();
                                             })
-                                            .then(blob => new Promise((resolve, reject) => {
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => {
-                                                    resolve({
-                                                        success: true,
-                                                        file: {
-                                                            url: reader.result,
-                                                        },
-                                                    });
-                                                };
-                                                reader.onerror = reject;
-                                                reader.readAsDataURL(blob);
-                                            }));
+                                            .then(blob => {
+                                                if (blob.size / 1024 > 100) {
+                                                    this.$alert('File too big! Only 100kB are allowed', null, 'warning');
+                                                    return Promise.reject('File too big');
+                                                }
+
+                                                return new Promise((resolve, reject) => {
+                                                    const reader = new FileReader();
+                                                    reader.onloadend = () => {
+                                                        resolve({
+                                                            success: true,
+                                                            file: {
+                                                                url: reader.result,
+                                                            },
+                                                        });
+                                                    };
+                                                    reader.onerror = reject;
+                                                    reader.readAsDataURL(blob);
+                                                });
+                                            });
                                     },
                                 },
                             },
@@ -243,7 +254,7 @@
                         },
                         header: {
                             class: Header,
-                            inlineToolbar: true,
+                            inlineToolbar: false,
                         },
                         quote: {
                             class: Quote,

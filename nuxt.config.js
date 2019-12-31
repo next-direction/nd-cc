@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 export default {
   mode: 'universal',
   /*
@@ -72,6 +74,6 @@ export default {
     },
   },
   env: {
-    baseUrl: process.env.BASE_URL || 'http://localhost/d-api-1/public/d-api-1',
+    baseUrl: process.env.BASE_URL || 'http://localhost',
   },
 };
