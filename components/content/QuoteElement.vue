@@ -1,5 +1,5 @@
 <template>
-  <blockquote :cite="cite" :class="{alignCenter: content.alignment !== 'left'}" v-html="content.text"></blockquote>
+  <blockquote :cite="cite" :class="{alignCenter: content.alignment !== 'left', paddingBottom: !cite}" v-html="content.text"></blockquote>
 </template>
 
 <script>
@@ -8,7 +8,7 @@
     export default {
         computed: {
             cite () {
-                return stripTags(this.content.caption);
+                return stripTags(this.content.caption).trim().length ? '- ' + stripTags(this.content.caption) : '';
             },
         },
         props: ['content'],
@@ -29,6 +29,10 @@
     &.alignCenter {
       text-align: center;
     }
+
+    &.paddingBottom {
+      padding-bottom: 1.5rem;
+    }
   }
 
   blockquote:before {
@@ -46,7 +50,7 @@
   }
 
   blockquote:after {
-    content: "\2013 \2003" attr(cite);
+    content: attr(cite);
     display: block;
     text-align: right;
     font-size: 0.875em;

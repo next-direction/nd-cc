@@ -271,6 +271,10 @@
                         table: {
                             class: Table,
                             inlineToolbar: true,
+                            config: {
+                                rows: 1,
+                                cols: 1,
+                            },
                         },
                         warning: {
                             class: Warning,
