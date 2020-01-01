@@ -48,10 +48,11 @@
     font-size: 1.1rem;
     padding: 1.2rem;
     box-shadow: 0 3px 6px rgba(0, 0, 0, .4) inset;
-    position: sticky;
+    position: fixed;
     bottom: 0;
     background: white;
     z-index: 10;
+    width: 100%;
 
     .copy {
       color: $secondary-color;

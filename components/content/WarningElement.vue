@@ -1,6 +1,6 @@
 <template>
   <div class="warning">
-    <span class="icon">
+    <span class="icon" :class="{small: !content.title}">
       <fa :icon="fa.faExclamationTriangle"></fa>
     </span>
     <span class="content">
@@ -36,6 +36,10 @@
 
     .icon {
       font-size: 3rem;
+
+      &.small {
+        font-size: 1.4rem;
+      }
     }
 
     .content {
