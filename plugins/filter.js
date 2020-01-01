@@ -18,9 +18,11 @@ Vue.filter('formatDate', dateString => {
 Vue.filter('excerpt', text => {
   text = stripTags(text);
 
-  if (text.length > 200) {
-    text = text.substring(0, 200).trim() + '...';
+  if (text.length > 190) {
+    text = text.substring(0, 190).trim() + '...';
   }
 
   return text;
 });
+
+Vue.prototype.$filters = Vue.options.filters;

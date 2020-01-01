@@ -1,10 +1,10 @@
 <template>
   <div class="list">
     <ul v-if="content.style === 'unordered'">
-      <li v-for="item in content.items">{{ item }}</li>
+      <li v-for="item in content.items" v-html="item"></li>
     </ul>
     <ol v-if="content.style === 'ordered'">
-      <li v-for="item in content.items">{{ item }}</li>
+      <li v-for="item in content.items" v-html="item"></li>
     </ol>
   </div>
 </template>

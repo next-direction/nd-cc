@@ -1,8 +1,6 @@
 <template>
   <span class="excerpt__content">
-    <span v-if="getFirstParagraph">
-      {{ getFirstParagraph | ucfirst | excerpt }}
-    </span>
+    <span v-if="getFirstParagraph" v-html="getFirstParagraph"></span>
   </span>
 </template>
 
@@ -18,7 +16,7 @@
                     }
                 });
 
-                return content;
+                return this.$filters.excerpt(this.$filters.ucfirst(content));
             },
         },
         props: ['blocks'],

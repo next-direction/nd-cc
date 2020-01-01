@@ -1,9 +1,16 @@
 <template>
-  <blockquote :cite="content.caption" :class="{alignCenter: content.alignment !== 'left'}">{{ content.text }}</blockquote>
+  <blockquote :cite="cite" :class="{alignCenter: content.alignment !== 'left'}" v-html="content.text"></blockquote>
 </template>
 
 <script>
+    import stripTags from 'striptags';
+
     export default {
+        computed: {
+            cite () {
+                return stripTags(this.content.caption);
+            },
+        },
         props: ['content'],
     };
 </script>

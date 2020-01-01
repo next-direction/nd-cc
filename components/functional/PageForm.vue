@@ -271,10 +271,6 @@
                         table: {
                             class: Table,
                             inlineToolbar: true,
-                            config: {
-                                rows: 1,
-                                cols: 1,
-                            },
                         },
                         warning: {
                             class: Warning,
@@ -292,48 +288,59 @@
         mounted () {
             if (!document.getElementById('editorJsScript')) {
                 let script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/editorjs');
+                script.setAttribute('src', '/editorjs/editorjs.js');
                 script.setAttribute('id', 'editorJsScript');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/image');
+                script.setAttribute('src', '/editorjs/image.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/marker');
+                script.setAttribute('src', '/editorjs/marker.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/quote');
+                script.setAttribute('src', '/editorjs/quote.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/paragraph');
+                script.setAttribute('src', '/editorjs/paragraph.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/list');
+                script.setAttribute('src', '/editorjs/list.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/table');
+                script.setAttribute('src', '/editorjs/table.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/header');
+                script.setAttribute('src', '/editorjs/header.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/warning');
+                script.setAttribute('src', '/editorjs/warning.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/inline-code');
+                script.setAttribute('src', '/editorjs/inline-code.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
-                script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@editorjs/delimiter');
+                script.setAttribute('src', '/editorjs/delimiter.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
             }
 
@@ -341,10 +348,12 @@
                 let script = document.createElement('script');
                 script.setAttribute('id', 'detailScript');
                 script.setAttribute('src', '/script/code-plugin.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
                 script.setAttribute('src', '/ace/ace.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('link');

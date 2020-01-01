@@ -4,14 +4,15 @@
       <fa :icon="fa.faExclamationTriangle"></fa>
     </span>
     <span class="content">
-      <span class="title" v-if="content.title">{{ content.title }}</span>
-      <span class="message">{{ content.message }}</span>
+      <span class="title" v-if="content.title" v-html="content.title"></span>
+      <span class="message" v-html="content.message"></span>
     </span>
   </div>
 </template>
 
 <script>
     import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+    import stripTags from 'striptags';
 
     export default {
         props: ['content'],
@@ -31,6 +32,7 @@
     background: $warning-light;
     color: $warning-dark;
     display: flex;
+    margin: 1rem 0;
 
     .icon {
       font-size: 3rem;

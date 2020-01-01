@@ -2,7 +2,7 @@
   <table>
     <tbody>
     <tr v-for="row in content.content">
-      <td v-for="text in row">{{ text }}</td>
+      <td v-for="text in row" v-html="text"></td>
     </tr>
     </tbody>
   </table>
@@ -18,6 +18,7 @@
   table {
     width: 100%;
     border-collapse: collapse;
+    margin: 1rem 0;
   }
 
   tr:nth-child(2n) td {

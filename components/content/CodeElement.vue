@@ -43,10 +43,12 @@
                 let script = document.createElement('script');
                 script.setAttribute('id', 'detailScript');
                 script.setAttribute('src', '/script/code-plugin.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
                 script.setAttribute('src', '/ace/ace.js');
+                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('link');

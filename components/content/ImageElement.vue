@@ -25,6 +25,10 @@
       border: 1px solid $main-light;
     }
 
+    img {
+      max-width: 100%;
+    }
+
     img.fullWidth {
       width: 100%;
     }
