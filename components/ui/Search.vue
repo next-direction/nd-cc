@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input placeholder="Search in questions" v-model="term" @keypress.enter.prevent="searchTerm"/>
+    <input placeholder="Search in questions (Ctrl + Shift + F)" id="search-field" v-model="term" @keypress.enter.prevent="searchTerm"/>
     <button @click="searchTerm">
       <fa :icon="fa.faSearch"></fa>
     </button>

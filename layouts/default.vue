@@ -26,6 +26,13 @@
             SignInForm,
             SignUpForm,
         },
+        mounted () {
+            window.addEventListener('keypress', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.code === 'KeyF') {
+                    document.getElementById('search-field').focus();
+                }
+            });
+        },
     };
 </script>
 

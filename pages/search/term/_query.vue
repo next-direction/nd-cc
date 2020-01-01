@@ -25,8 +25,8 @@
 
             const term = params.query;
 
-            // fetch pages (detour over parent_page because otherwise filtering would not be possible)
-            const pageResponse = await fetch(
+            // fetch pages with answers (detour over parent_page because otherwise filtering would not be possible)
+            const pageResponseWithPromise = fetch(
                 store.state.baseUrl
                 + `/items/page?sort=-created_on&groups=parent_page`
                 + '&fields=parent_page.*,parent_page.category.id,parent_page.created_by.id,parent_page.created_by.last_name,parent_page.children.id,parent_page.children.accepted,parent_page.votes.*'
@@ -34,14 +34,38 @@
                 {
                     headers,
                 },
-            );
+            ).then(response => response.json());
 
-            const { data } = await pageResponse.json();
+            // pages that might not have answers (unfortunately no clean way to filter this at the moment)
+            const pageResponseWithoutPromise = fetch(
+                store.state.baseUrl
+                + `/items/page?sort=-created_on`
+                + '&fields=*,category.id,created_by.id,created_by.last_name,children.id,children.accepted,votes.*'
+                + `&filter[title][0][contains]=${term}&filter[title][1][ncontains]=answer-&filter[content][logical]=or&filter[content][contains]=${term}&filter[parent_page][eq]=0`,
+                {
+                    headers,
+                },
+            ).then(response => response.json());
 
-            const pages = [];
+            // allow parallel execution for performance
+            const pages = await Promise.all([pageResponseWithPromise, pageResponseWithoutPromise]).then(responses => {
+                const hits = [];
 
-            data.forEach(page => {
-                pages.push(page.parent_page);
+                // pages with answers
+                responses[0].data.forEach(page => {
+                    hits.push(page.parent_page);
+                });
+
+                // pages without answers
+                responses[1].data.forEach(page => {
+                    const alreadyIn = hits.findIndex(hit => +page.id === +hit.id);
+
+                    if (-1 === alreadyIn) {
+                        hits.push(page);
+                    }
+                });
+
+                return hits;
             });
 
             return {
