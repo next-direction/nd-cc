@@ -94,7 +94,7 @@
         .comments__comment-edit {
           margin-left: 0.6rem;
           font-size: 0.85rem;
-          display: none;
+          visibility: hidden;
           color: $main-color;
 
           &:hover {
@@ -106,11 +106,20 @@
 
       &:hover {
         .comments__comment-edit {
-          display: inline;
+          visibility: visible;
         }
       }
     }
 
   }
 
+  .acceptedAnswer {
+    .comments__comment {
+      background: white;
+    }
+
+    .comments__icon {
+      color: $gray-dark;
+    }
+  }
 </style>

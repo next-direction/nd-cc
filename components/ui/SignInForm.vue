@@ -68,6 +68,8 @@
                     if (result.error) {
                         if (result.error.code === 100) {
                             this.$alert('Invalid email address or password', null, 'warning');
+                        } else if (result.error.code === 103) {
+                            this.$alert('This account is not active', null, 'warning');
                         } else {
                             console.log(result.error.message);
                             this.$alert('Error during login, try again later or contact us if the error persists', null, 'error');

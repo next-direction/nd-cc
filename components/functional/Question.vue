@@ -7,10 +7,10 @@
       <button @click="$emit('edit')" class="info" v-if="editable">Edit</button>
     </div>
     <p class="meta">
-      Created by <strong>{{ details.created_by.last_name }}</strong> at <strong>{{ details.created_on | formatDate }}</strong> in <strong>{{ getCategoryTree(details.category.id)
+      <strong>{{ details.created_by.last_name }}</strong> at <strong>{{ details.created_on | formatDate }}</strong> in <strong>{{ getCategoryTree(details.category.id)
       }}</strong>
-      <span v-if="details.created_on !== details.modified_on">
-        Modified by <strong>{{ details.modified_by.last_name }}</strong> at <strong>{{ details.modified_on | formatDate }}</strong>
+      <span v-if="details.created_on !== details.modified_on" :title="'edited by ' + details.modified_by.last_name + ' at ' + $filters.formatDate(details.modified_on)">
+        <fa :icon="fa.faPen"></fa>
       </span>
     </p>
     <div class="question__content">
@@ -38,7 +38,7 @@
     import Blocks from '~/components/content/Blocks.vue';
     import Comments from '~/components/functional/Comments/Comments.vue';
     import Tags from '~/components/content/Tags.vue';
-    import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+    import { faChevronUp, faChevronDown, faPen } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         components: {
@@ -60,6 +60,7 @@
                 return {
                     faChevronUp,
                     faChevronDown,
+                    faPen,
                 };
             },
             user () {
@@ -140,8 +141,7 @@
       text-align: right;
 
       span {
-        display: block;
-        margin-top: 0.2rem;
+        margin-left: 0.4rem;
       }
     }
   }

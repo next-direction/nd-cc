@@ -19,9 +19,10 @@
             <button type="button" class="gray small" @click="editMode = true">Edit</button>
           </p>
           <p class="answer__footer-meta">
-            Answered by <strong>{{ details.created_by.last_name }}</strong> at <strong>{{ details.created_on | formatDate }}</strong>
-            <span class="meta--modified" v-if="details.created_on !== details.modified_on">
-              Modified by <strong>{{ details.modified_by.last_name }}</strong> at <strong>{{ details.modified_on | formatDate }}</strong>
+            <strong>{{ details.created_by.last_name }}</strong> at <strong>{{ details.created_on | formatDate }}</strong>
+            <span class="meta--modified" v-if="details.created_on !== details.modified_on"
+                  :title="'edited by ' + details.modified_by.last_name + ' at ' + $filters.formatDate(details.modified_on)">
+              <fa :icon="fa.faPen"></fa>
             </span>
           </p>
         </div>
@@ -49,7 +50,7 @@
     import Blocks from '~/components/content/Blocks.vue';
     import Comments from '~/components/functional/Comments/Comments.vue';
     import PageForm from '~/components/functional/PageForm.vue';
-    import { faCheck, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+    import { faCheck, faChevronUp, faChevronDown, faPen } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         components: {
@@ -75,6 +76,7 @@
                     faCheck,
                     faChevronUp,
                     faChevronDown,
+                    faPen,
                 };
             },
             parent () {
@@ -147,6 +149,11 @@
       .answer__footer-meta {
         color: $success-dark;
       }
+
+      .action-vote-up,
+      .action-vote-down {
+        color: $gray-dark !important;
+      }
     }
 
     .answers__options {
@@ -208,7 +215,7 @@
         text-align: right;
 
         .meta--modified {
-          display: block;
+          margin-left: 0.4rem;
         }
       }
     }

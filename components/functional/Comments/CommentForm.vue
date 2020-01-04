@@ -238,4 +238,14 @@
   .editor-comment-content .ce-block:first-child {
     border-radius: $border-radius;
   }
+
+  .acceptedAnswer {
+    .editor-comment-content {
+      background: white;
+
+      .ce-block--focused {
+        background: white !important;
+      }
+    }
+  }
 </style>

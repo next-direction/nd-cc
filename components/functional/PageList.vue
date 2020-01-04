@@ -13,7 +13,7 @@
             <Tags :tags="page.tags"/>
           </div>
           <p class="page__meta">
-            Created by <strong>{{ page.created_by.last_name }}</strong> at <strong>{{ page.created_on | formatDate }}</strong> in <strong>{{
+            <strong>{{ page.created_by.last_name }}</strong> at <strong>{{ page.created_on | formatDate }}</strong> in <strong>{{
             getCategoryTree(page.category.id)}}</strong>
           </p>
         </div>
