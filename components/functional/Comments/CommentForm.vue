@@ -120,6 +120,12 @@
                             class: SimpleParagraph,
                             inlineToolbar: true,
                         },
+                        Marker: {
+                            class: Marker,
+                        },
+                        inlineCode: {
+                            class: InlineCode,
+                        },
                     },
                 });
             },
@@ -137,6 +143,16 @@
                 script = document.createElement('script');
                 script.setAttribute('src', '/editorjs/paragraph.js');
                 document.head.appendChild(script);
+
+                script = document.createElement('script');
+                script.setAttribute('src', '/editorjs/marker.js');
+                script.setAttribute('async', 'true');
+                document.head.appendChild(script);
+
+                script = document.createElement('script');
+                script.setAttribute('src', '/editorjs/inline-code.js');
+                script.setAttribute('async', 'true');
+                document.head.appendChild(script);
             }
 
             if (!document.getElementById('editorJsSimple')) {
@@ -150,7 +166,10 @@
             const interval = setInterval(() => {
                 if (
                     'undefined' !== typeof EditorJS
+                    && 'undefined' !== typeof Paragraph
                     && 'undefined' !== typeof SimpleParagraph
+                    && 'undefined' !== typeof Marker
+                    && 'undefined' !== typeof InlineCode
                 ) {
                     clearInterval(interval);
                     this.initEditor();

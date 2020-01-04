@@ -308,6 +308,16 @@
                 script.setAttribute('src', '/editorjs/paragraph.js');
                 script.setAttribute('async', 'true');
                 document.head.appendChild(script);
+
+                script = document.createElement('script');
+                script.setAttribute('src', '/editorjs/marker.js');
+                script.setAttribute('async', 'true');
+                document.head.appendChild(script);
+
+                script = document.createElement('script');
+                script.setAttribute('src', '/editorjs/inline-code.js');
+                script.setAttribute('async', 'true');
+                document.head.appendChild(script);
             }
 
             if (!document.getElementById('editorJsPlugins')) {
@@ -315,11 +325,6 @@
                 script.setAttribute('src', '/editorjs/image.js');
                 script.setAttribute('async', 'true');
                 script.setAttribute('id', 'editorJsPlugins');
-                document.head.appendChild(script);
-
-                script = document.createElement('script');
-                script.setAttribute('src', '/editorjs/marker.js');
-                script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
@@ -344,11 +349,6 @@
 
                 script = document.createElement('script');
                 script.setAttribute('src', '/editorjs/warning.js');
-                script.setAttribute('async', 'true');
-                document.head.appendChild(script);
-
-                script = document.createElement('script');
-                script.setAttribute('src', '/editorjs/inline-code.js');
                 script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
