@@ -4,15 +4,15 @@ import stripTags from 'striptags';
 Vue.filter('ucfirst', word => word.charAt(0).toUpperCase() + word.substring(1));
 
 Vue.filter('formatDate', dateString => {
-  const date = new Date(dateString);
-  const now = new Date();
+  const date = new Date(dateString.replace(' ', 'T') + 'Z');
 
-  const offset = now.getTimezoneOffset() / 60;
-  const hours = date.getHours();
-
-  date.setHours(hours - offset);
-
-  return date.toLocaleString();
+  return date.toLocaleString(undefined, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).replace(',', '');
 });
 
 Vue.filter('excerpt', text => {
