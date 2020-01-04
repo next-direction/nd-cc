@@ -34,6 +34,16 @@
   url('/fonts/montserrat-v14-latin-800italic.woff') format('woff');
 }
 
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'),
+  url('/fonts/inconsolata-v16-latin-regular.woff2') format('woff2'),
+  url('/fonts/inconsolata-v16-latin-regular.woff') format('woff');
+}
+
 html {
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI',
   Ubuntu, Roboto, 'Helvetica Neue', Arial, sans-serif;

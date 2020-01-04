@@ -40,5 +40,19 @@ h6 {
   font-size: 1.2rem;
 }
 
+mark.cdx-marker {
+  background: rgb(245, 235, 111);
+}
+
+code.inline-code {
+  background: $main-bg;
+  color: $main-color;
+  font-family: Inconsolata, monospace;
+}
+
+div.ace_editor {
+  font: 14px/normal 'Inconsolata', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+
 @import '~assets/style/ui/buttons.scss';
 @import '~assets/style/ui/form.scss';
