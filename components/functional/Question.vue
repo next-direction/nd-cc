@@ -28,6 +28,7 @@
         <div class="page__tags" v-if="details.tags.length">
           <Tags :tags="details.tags"/>
         </div>
+        <Comments :comments="details.comments" :pageId="details.id"/>
       </div>
     </div>
   </section>
@@ -35,12 +36,14 @@
 
 <script>
     import Blocks from '~/components/content/Blocks.vue';
+    import Comments from '~/components/functional/Comments/Comments.vue';
     import Tags from '~/components/content/Tags.vue';
     import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         components: {
             Blocks,
+            Comments,
             Tags,
         },
         computed: {

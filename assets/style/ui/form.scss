@@ -1,6 +1,10 @@
 .form__button {
   text-align: center;
   padding: 1rem;
+
+  &.condensed {
+    padding: 0.4rem;
+  }
 }
 
 .form__field--required {

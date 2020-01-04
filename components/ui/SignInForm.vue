@@ -114,6 +114,7 @@
                 this.email = '';
                 this.password = '';
 
+                this.$v.$reset();
                 this.loading = false;
 
                 this.$store.commit('showBackdrop', false);

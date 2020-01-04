@@ -48,6 +48,19 @@ export const mutations = {
   addChild (state, child) {
     state.details.children.push(child);
   },
+  addComment (state, comment) {
+    if (+state.details.id === +comment.page.id) {
+      state.details.comments.push(comment);
+    } else { // add to answer
+      state.details.children = state.details.children.map(child => {
+        if (+child.id === +comment.page.id) {
+          child.comments.push(comment);
+        }
+
+        return child;
+      });
+    }
+  },
   addVote (state, vote) {
     if (+state.details.id === +vote.page) {
       state.details.votes.push(vote);
@@ -97,6 +110,21 @@ export const mutations = {
       return child.id === newChild.id ? newChild : child;
     });
   },
+  updateComment (state, editedComment) {
+    if (+state.details.id === +editedComment.page.id) {
+      state.details.comments = state.details.comments.map(comment => {
+        return +comment.id === +editedComment.id ? editedComment : comment;
+      });
+    } else { // update comment for answer
+      state.details.children = state.details.children.map(child => {
+        if (+child.id === +editedComment.page.id) {
+          child.comments = child.comments.map(existing => +existing.id === +editedComment.id ? editedComment : existing);
+        }
+
+        return child;
+      });
+    }
+  },
   updatePage (state, page) {
     state.details.title = page.title;
     state.details.content = page.content;
@@ -107,12 +135,12 @@ export const mutations = {
   updateVote (state, editedVote) {
     if (+state.details.id === +editedVote.page) {
       state.details.votes = state.details.votes.map(vote => {
-        return vote.id === editedVote.id ? editedVote : vote;
+        return +vote.id === +editedVote.id ? editedVote : vote;
       });
     } else { // update vote for answer
       state.details.children = state.details.children.map(child => {
         if (+child.id === +editedVote.page) {
-          child.votes = child.votes.map(existing => existing.id === editedVote.id ? editedVote : existing);
+          child.votes = child.votes.map(existing => +existing.id === +editedVote.id ? editedVote : existing);
         }
 
         return child;

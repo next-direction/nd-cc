@@ -47,7 +47,8 @@
             baseUrl
             + '/items/page/' + pageId + '?fields=*,created_by.last_name,created_by.id,modified_by.last_name,modified_by.id,category.id,'
             + 'children.*,children.created_by.last_name,children.created_by.id,children.modified_by.last_name,children.modified_on,'
-            + 'votes.*,children.votes.*,tags',
+            + 'votes.*,children.votes.*,tags,comments.*,comments.created_by.last_name,comments.created_by.id,comments.modified_by.last_name,'
+            + 'children.comments.*,children.comments.created_by.last_name,children.comments.created_by.id,children.comments.modified_by.last_name',
             {
                 headers,
             },
@@ -88,6 +89,9 @@
                 if (mutation.type === 'toggleUserStateChange') {
                     if (!this.$store.state.user && 'draft' === this.details.status) {
                         this.$router.push('/');
+                    } else if (!this.$store.state.user) {
+                        this.editMode = false;
+                        this.editSaved = true;
                     }
                 }
             });

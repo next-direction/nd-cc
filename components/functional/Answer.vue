@@ -25,6 +25,7 @@
             </span>
           </p>
         </div>
+        <Comments :comments="details.comments" :pageId="details.id"/>
       </div>
     </div>
 
@@ -46,12 +47,14 @@
 
 <script>
     import Blocks from '~/components/content/Blocks.vue';
+    import Comments from '~/components/functional/Comments/Comments.vue';
     import PageForm from '~/components/functional/PageForm.vue';
     import { faCheck, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
     export default {
         components: {
             Blocks,
+            Comments,
             PageForm,
         },
         computed: {
@@ -161,7 +164,7 @@
 
       .action-vote-up,
       .action-vote-down {
-        color: $gray-dark;
+        color: $gray-light;
         font-size: 1.2rem;
         cursor: pointer;
 
@@ -196,6 +199,7 @@
       align-items: center;
       justify-content: space-between;
       margin-top: 0.8rem;
+      margin-bottom: 0.4rem;
 
       &-meta {
         flex: 1;

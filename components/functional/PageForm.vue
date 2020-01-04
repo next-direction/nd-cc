@@ -6,7 +6,7 @@
     </div>
     <div class="editor-container">
       <span class="content-label" v-if="!onlyEditor">Content<span class="form__field--required"> *</span></span>
-      <div id="content-editor"></div>
+      <div class="editor-content" :id="editorId"></div>
     </div>
     <div class="form__element" v-if="!onlyEditor">
       <Tags @input="setTags" :value="tags"/>
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+    import uuid4 from 'uuid/v4';
+
     import Tags from '~/components/functional/Tags.vue';
 
     const sanitizeTags = tags => {
@@ -45,6 +47,7 @@
                 title: this.defaultTitle,
                 tags: this.defaultTags.filter(tag => tag !== ''),
                 loading: false,
+                editorId: null,
             };
         },
         props: {
@@ -179,9 +182,10 @@
                     /**
                      * Id of Element that should contain Editor instance
                      */
-                    holder: 'content-editor',
+                    holder: this.editorId,
                     data: this.defaultData,
                     placeholder: this.placeholder,
+                    logLevel: 'ERROR',
                     onChange: () => {
                         this.$emit('updateSaved', false);
                     },
@@ -290,16 +294,27 @@
             },
         },
         mounted () {
+            this.editorId = uuid4();
+            let script;
+
             if (!document.getElementById('editorJsScript')) {
-                let script = document.createElement('script');
+                script = document.createElement('script');
                 script.setAttribute('src', '/editorjs/editorjs.js');
                 script.setAttribute('id', 'editorJsScript');
                 script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
+                script.setAttribute('src', '/editorjs/paragraph.js');
+                script.setAttribute('async', 'true');
+                document.head.appendChild(script);
+            }
+
+            if (!document.getElementById('editorJsPlugins')) {
+                script = document.createElement('script');
                 script.setAttribute('src', '/editorjs/image.js');
                 script.setAttribute('async', 'true');
+                script.setAttribute('id', 'editorJsPlugins');
                 document.head.appendChild(script);
 
                 script = document.createElement('script');
@@ -309,11 +324,6 @@
 
                 script = document.createElement('script');
                 script.setAttribute('src', '/editorjs/quote.js');
-                script.setAttribute('async', 'true');
-                document.head.appendChild(script);
-
-                script = document.createElement('script');
-                script.setAttribute('src', '/editorjs/paragraph.js');
                 script.setAttribute('async', 'true');
                 document.head.appendChild(script);
 
@@ -396,14 +406,13 @@
     margin-left: 0.6rem;
   }
 
-  #content-editor {
+  .editor-content {
     width: 100%;
     background: #F6F6F6;
     border-radius: $border-radius;
     margin: 10px auto;
-  }
+    min-height: 75px;
 
-  #content-editor {
     .cdx-settings-button[data-level='1'] {
       display: none;
     }
@@ -417,16 +426,16 @@
     }
   }
 
-  #content-editor .codex-editor__loader {
+  .editor-content .codex-editor__loader {
     height: 75px;
   }
 
-  #content-editor .codex-editor__redactor {
+  .editor-content .codex-editor__redactor {
     padding-bottom: 34px !important;
     position: relative;
   }
 
-  #content-editor .codex-editor__redactor:after {
+  .editor-content .codex-editor__redactor:after {
     content: '+';
     position: absolute;
     width: 100%;
@@ -441,20 +450,20 @@
     cursor: pointer;
   }
 
-  #content-editor .ce-block {
+  .editor-content .ce-block {
     border-bottom: 1px dotted lightgray;
   }
 
-  #content-editor .ce-block:first-child {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+  .editor-content .ce-block:first-child {
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
   }
 
-  #content-editor .ce-block.ce-block--focused {
+  .editor-content .ce-block.ce-block--focused {
     background: rgba(100, 100, 200, 0.05);
   }
 
-  #content-editor .ce-settings__code-plugin-mode {
+  .editor-content .ce-settings__code-plugin-mode {
     width: calc(100% - 8px);
     margin: 4px;
     box-sizing: border-box;
