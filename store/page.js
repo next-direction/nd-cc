@@ -131,6 +131,7 @@ export const mutations = {
     state.details.modified_by = page.modified_by;
     state.details.modified_on = page.modified_on;
     state.details.tags = page.tags;
+    state.details.status = page.status;
   },
   updateVote (state, editedVote) {
     if (+state.details.id === +editedVote.page) {

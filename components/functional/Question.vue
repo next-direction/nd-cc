@@ -13,7 +13,7 @@
         <fa :icon="fa.faPen"></fa>
       </span>
     </p>
-    <div class="question__content">
+    <div class="question__content" :class="{announcement: details.status === 'announcement'}">
       <div class="question__content-actions" v-if="details.status !== 'draft'">
         <span class="action-vote-up" :class="{ currentVote: currentVote === 1 }" title="Vote up" @click="vote(1)">
           <fa :icon="fa.faChevronUp"></fa>
@@ -127,11 +127,20 @@
           margin: 0.6rem 0;
         }
       }
+
+      &.announcement {
+        border-left: 10px solid $danger-dark;
+      }
     }
 
     .header {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
+
+      button {
+        flex: 0 0 auto;
+      }
     }
 
     .meta {

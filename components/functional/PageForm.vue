@@ -1,5 +1,12 @@
 <template>
   <form @submit.prevent="defaultData && Object.keys(defaultData).length ? updatePage() : savePage()">
+    <section class="page__options" v-if="user && user.role.name === 'Administrator' && !onlyEditor">
+      <span><strong>Page options</strong></span>
+      <div class="form__checkbox circle-full" danger v-if="user && user.role.name === 'Administrator'">
+        <input type="checkbox" id="announcement" v-model="isAnnouncement"/>
+        <label for="announcement">Accouncement</label>
+      </div>
+    </section>
     <div class="form__field" v-show="!onlyEditor">
       <input id="title" placeholder="Title" v-model="title" @input="$emit('updateSaved', false)"/>
       <label for="title">Title<span class="form__field--required"> *</span></label>
@@ -42,15 +49,25 @@
         components: {
             Tags,
         },
+        computed: {
+            user () {
+                return this.$store.state.user;
+            },
+        },
         data () {
             return {
                 title: this.defaultTitle,
                 tags: this.defaultTags.filter(tag => tag !== ''),
                 loading: false,
                 editorId: null,
+                isAnnouncement: this.announcement,
             };
         },
         props: {
+            announcement: {
+                type: Boolean,
+                default: false,
+            },
             category: String,
             defaultTitle: {
                 type: String,
@@ -91,7 +108,7 @@
             },
             async savePage () {
                 const data = {
-                    status: 'published',
+                    status: this.isAnnouncement ? 'announcement' : 'published',
                     title: this.title,
                     category: this.category,
                     content: await this.editor.save(),
@@ -147,6 +164,7 @@
                     content: await this.editor.save(),
                     category: this.category,
                     tags: sanitizeTags(this.tags),
+                    status: this.isAnnouncement ? 'announcement' : 'published',
                 };
 
                 if (!data.content.blocks.length) {
@@ -400,6 +418,15 @@
 </script>
 
 <style lang='scss'>
+  .page__options {
+    display: block;
+    margin-bottom: 1rem;
+    background: $main-bg;
+    padding: 0.6rem 1rem;
+    color: $main-color;
+    border-radius: $border-radius;
+  }
+
   .editor-container .content-label {
     color: $main-color;
     display: inline-block;

@@ -20,6 +20,7 @@
         :defaultData="details.content"
         :defaultTags="details.tags"
         :pageId="+details.id"
+        :announcement="details.status === 'announcement'"
       />
       <Answers/>
       <NewAnswer @updateSaved="updateSaved"/>
