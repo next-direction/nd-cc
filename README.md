@@ -1,6 +1,6 @@
-# Next Direction Coder Community
+# Next Direction Coding Community
 
-This is the repository of coder community. A project I created to practice a lot of stuff I learned over the last two years.
+This is the repository of coding community. A project I created to practice a lot of stuff I learned over the last two years.
 
 ## Why?
 
