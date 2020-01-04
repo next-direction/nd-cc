@@ -52,6 +52,10 @@
         font-weight: bold;
         margin-bottom: 0.6rem;
       }
+
+      .message {
+        line-height: 1.4;
+      }
     }
   }
 </style>
