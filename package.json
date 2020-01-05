@@ -5,7 +5,7 @@
   "author": "Manuel Hesselbarth",
   "private": true,
   "scripts": {
-    "dev": "nuxt --port 3001",
+    "dev": "nuxt --port 3001 --hostname 0.0.0.0",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"

@@ -68,11 +68,11 @@
 <style lang="scss">
   #toTop {
     position: fixed;
-    bottom: 100px;
-    right: 36px;
+    bottom: 90px;
+    right: 26px;
 
-    width: 3rem;
-    height: 3rem;
+    width: 48px;
+    height: 48px;
 
     display: flex;
     justify-content: center;
@@ -91,14 +91,14 @@
     transition: transform 0.5s ease;
 
     &:after {
-      content: '';
+      content: ' ';
       border: 1px solid $main-color;
       border-radius: $border-radius;
       background: transparent;
       position: absolute;
 
-      width: 3.3rem;
-      height: 3.3rem;
+      width: 110%;
+      height: 110%;
     }
 
     &.visible {
