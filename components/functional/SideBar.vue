@@ -16,13 +16,13 @@
 </template>
 
 <script>
-    import CategoryList from '~/components/functional/CategoryList.vue';
+  import CategoryList from '~/components/functional/CategoryList.vue';
 
-    export default {
-        components: {
-            CategoryList,
-        },
-    };
+  export default {
+    components: {
+      CategoryList,
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -37,6 +37,8 @@
       margin: 0.4rem 0;
       width: 100%;
       font-weight: bold;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
     }
 
     .parent-list {
@@ -61,6 +63,8 @@
           &.nuxt-link-exact-active {
             border-right: 4px solid $main-color;
             background: $main-bg;
+            border-top-left-radius: $border-radius;
+            border-bottom-left-radius: $border-radius;
           }
         }
       }

@@ -8,20 +8,20 @@
 </template>
 
 <script>
-    export default {
-        name: 'CategoryList',
-        props: {
-            parentCategory: Number,
-        },
-        computed: {
-            categories () {
-                const categories = this.$store.state.categories.all;
-                const parentMapping = this.$store.state.categories.parents;
+  export default {
+    name: 'CategoryList',
+    props: {
+      parentCategory: Number,
+    },
+    computed: {
+      categories () {
+        const categories = this.$store.state.categories.all;
+        const parentMapping = this.$store.state.categories.parents;
 
-                return categories.filter(category => +parentMapping[category.id] === +this.parentCategory);
-            },
-        },
-    };
+        return categories.filter(category => +parentMapping[category.id] === +this.parentCategory);
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -46,6 +46,8 @@
         &.nuxt-link-exact-active {
           border-right: 4px solid $main-color;
           background: $main-bg;
+          border-top-left-radius: $border-radius;
+          border-bottom-left-radius: $border-radius;
         }
       }
     }
